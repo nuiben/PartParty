@@ -10,7 +10,7 @@ To install Part Party, follow these steps:
 1. Clone the Part Party repository to your local machine.
 2. Open the project in your preferred IDE.
 3. Build the project using Maven.
-4. Run the main class, MainApp.java.
+4. Run the main class, Main.java.
 
 ## Usage
 Upon launching the application, the user will be presented with a main menu, where they can choose to navigate to the Parts or Products pages. From there, the user can add, edit, or delete parts and products from their inventory.
