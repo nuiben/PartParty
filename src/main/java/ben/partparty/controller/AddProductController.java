@@ -93,6 +93,7 @@ public class AddProductController extends AddPartController {
                     throw new RuntimeException("Values must be non-negative.");
                 } else {
                     product = newProduct();
+                    product.getAllAssociatedParts().addAll(temporaryAssociatedParts);
                     Inventory.addProduct(product);
                     setStage(save, fxmlLoad("/view/MainView.fxml"));
                 }
@@ -110,19 +111,29 @@ public class AddProductController extends AddPartController {
 
         if (product == null) {
             try {
+                if (partTable.getSelectionModel().getSelectedItem() == null) {
+                    throw new RuntimeException("No Selection Indicated.");
+                }
+                temporaryAssociatedParts.add(partTable.getSelectionModel().getSelectedItem());
+                associatedPartTable.setItems(temporaryAssociatedParts);
+            } catch (Exception exception) {
+                displayErrorMessage(exception);
+            }
+        } else {
+            try {
+                if (firstClickFlag == 0) {
+                    temporaryAssociatedParts.addAll(product.getAllAssociatedParts());
+                    firstClickFlag++;
+                }
+                if (partTable.getSelectionModel().getSelectedItem() == null) {
+                    throw new RuntimeException("No Selection Indicated.");
+                }
                 temporaryAssociatedParts.add(partTable.getSelectionModel().getSelectedItem());
                 associatedPartTable.setItems(temporaryAssociatedParts);
 
             } catch (Exception exception) {
                 displayErrorMessage(exception);
             }
-        } else {
-            if (firstClickFlag == 0) {
-                temporaryAssociatedParts.addAll(product.getAllAssociatedParts());
-                firstClickFlag++;
-            }
-            temporaryAssociatedParts.add(partTable.getSelectionModel().getSelectedItem());
-            associatedPartTable.setItems(temporaryAssociatedParts);
         }
 
     }

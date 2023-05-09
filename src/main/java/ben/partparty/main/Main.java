@@ -8,7 +8,41 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+
+/** This is the Main Class */
 public class Main extends Application {
+
+    /** This is the first method that gets called*/
+    public static void main(String[] args) {
+        String[] words = {"Widget", "Gadget", "Transformer", "Conduit", "Assembly", "Pulley", "Gizmo", "Apparatus",
+                "Oscillator", "Resistor", "Diode", "Inverter", "Switch", "Mechanism", "Valve", "Relay", "Pump",
+                "Sensor", "Rig", "Actuator"};
+        String[] techBuzzwords = {
+                "Intelligent", "Cutting-edge", "Innovative", "Future-proof",
+                "State-of-the-art", "High-performance", "Revolutionary", "Sleek", "Dynamic",
+                "Proactive", "Advanced Analytics", "Augmented Reality", "Virtual Reality",
+                "Precision", "Predictive", "Adaptive", "Smart-Connected", "Autonomous Vehicles",
+                "Next-gen", "Cloud-native", "Digital Twin", "Edge Computing",
+                "Intelligent Automation", "Machine Learning", "AI",
+                "Neural Networks", "Quantum Computing", "RPA",
+                "Sensor-driven", "Streaming Analytics", "Wearable Technology", "Precision-engineered",
+                "High-precision Sensors", "5G Connectivity", "Data-Driven",
+                "Self-Learning"};
+
+        for (int i = 0; i < 4; i++ ) {
+            System.out.println(i);
+            String InHouseName = words[(int)(Math.random() * words.length)];
+            System.out.println(InHouseName);
+            String OutsourcedName = words[(int)(Math.random() * words.length)];
+            System.out.println(OutsourcedName);
+            String ProductName = techBuzzwords[(int)(Math.random() * techBuzzwords.length)] + " " + words[(int)(Math.random() * words.length)];
+            System.out.println(ProductName);
+            Inventory.addPart(new InHouse(i+1, InHouseName, (int)(Math.random()*10) + 0.99, 10, 0, 50, 101044));
+            Inventory.addPart(new Outsourced(i+100, OutsourcedName, (int)(Math.random()*10) + 0.99, 150, 50, 200, "OmegaMart & Subsidiaries"));
+            Inventory.addProduct(new Product(i+1000, ProductName, (int)(Math.random()*100) + 0.99, 8, 0, 20));
+        }
+        launch(args);
+    }
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
@@ -18,16 +52,7 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
 
-        Part test_IH_Part = new InHouse(1, "Some InHouse Part", 5.00, 22, 12, 50, 900);
-        Part test_OS_Part = new Outsourced(101, "Some Outsourced Part", 18.00, 50, 20, 100, "Big Brand International");
-        Product test_Product = new Product(25, "Test Products", 69.99, 8, 0, 20);
-        Inventory.addPart(test_IH_Part);
-        Inventory.addPart(test_OS_Part);
-        Inventory.addProduct(test_Product);
-        launch(args);
-    }
 
     public static void quit() {
         Platform.exit();
