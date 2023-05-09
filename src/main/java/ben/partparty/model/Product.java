@@ -8,10 +8,11 @@ public class Product extends Part{
     public Product(int id, String name, double price, int stock, int min, int max) {
         super(id, name, price, stock, min, max);
     }
-    public ObservableList<Part> getAssociatedParts() {
-        return associatedParts;
-    }
     public void addAssociatedPart(Part part) {
         associatedParts.add(part);
+    }
+    public boolean deleteAssociatedPart(Part selectedAssociatedPart) { return associatedParts.remove(selectedAssociatedPart);}
+    public ObservableList<Part> getAllAssociatedParts() {
+        return associatedParts;
     }
 }

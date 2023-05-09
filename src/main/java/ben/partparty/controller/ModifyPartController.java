@@ -6,7 +6,6 @@ import ben.partparty.model.Outsourced;
 import ben.partparty.model.Part;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 
 import java.net.URL;
@@ -16,6 +15,7 @@ public class ModifyPartController extends AddPartController {
     public int selectedIndex;
     public Part selectedPart;
     public RadioButton optionOS;
+    private int idCount;
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Path Loaded from source: " + url);
@@ -44,10 +44,7 @@ public class ModifyPartController extends AddPartController {
             Inventory.updatePart(selectedIndex, savePart(selectedPart));
             setStage(save, fxmlLoad("/view/MainView.fxml"));
         } catch (Exception exception) {
-            Alert errorMessage = new Alert(Alert.AlertType.ERROR);
-            errorMessage.setTitle("Invalid Input");
-            errorMessage.setContentText(exception.getMessage());
-            errorMessage.show();
+            displayErrorMessage(exception);
         }
     }
 
@@ -70,12 +67,12 @@ public class ModifyPartController extends AddPartController {
         if (optionOS.isSelected()) {
             try { ((Outsourced) part).setCompanyName(optionTextBox.getText()); }
             catch(ClassCastException exception) {
-                part = newOutsourcedPart();
+                part = newOutsourcedPart(getHighestID(Inventory.getAllParts()));
             }
         } else {
             try { ((InHouse) part).setMachineID(Integer.parseInt(optionTextBox.getText())); }
             catch(ClassCastException exception) {
-                part = newInHousePart();
+                part = newInHousePart(getHighestID(Inventory.getAllParts()));
             }
         }
         return part;

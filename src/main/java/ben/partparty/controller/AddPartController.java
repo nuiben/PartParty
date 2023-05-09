@@ -32,6 +32,7 @@ public class AddPartController extends MainViewController {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Path Loaded from source: " + url);
         idCount = getHighestID(Inventory.getAllParts());
+        idTextBox.setText(String.valueOf(idCount+1));
     }
 
     public void OnOptionToggleInHouse() {
@@ -56,9 +57,9 @@ public class AddPartController extends MainViewController {
                 throw new RuntimeException("Values must be non-negative.");
             } else {
                 if (optionOS.isSelected()) {
-                    Inventory.addPart(newOutsourcedPart());
+                    Inventory.addPart(newOutsourcedPart(idCount));
                 } else {
-                    Inventory.addPart(newInHousePart());
+                    Inventory.addPart(newInHousePart(idCount));
                 }
                 setStage(save, fxmlLoad("/view/MainView.fxml"));
             }
@@ -66,14 +67,13 @@ public class AddPartController extends MainViewController {
         catch (Exception exception) {
             Alert errorMessage = new Alert(Alert.AlertType.ERROR);
             errorMessage.setTitle("Invalid Input");
-            errorMessage.setContentText(exception.getMessage());
+            errorMessage.setContentText(exception.getClass() +"\n"+ exception.getMessage());
             errorMessage.show();
         }
     }
 
-    public Part newInHousePart() {
+    public Part newInHousePart(int idCount) {
         return new InHouse(
-//                Integer.parseInt(idTextBox.getText()),
                 ++idCount,
                 nameTextBox.getText(),
                 Double.parseDouble(priceTextBox.getText()),
@@ -84,9 +84,8 @@ public class AddPartController extends MainViewController {
 
     }
 
-    public Part newOutsourcedPart() {
+    public Part newOutsourcedPart(int idCount) {
         return new Outsourced(
-//                Integer.parseInt(idTextBox.getText()),
                 ++idCount,
                 nameTextBox.getText(),
                 Double.parseDouble(priceTextBox.getText()),
@@ -96,9 +95,9 @@ public class AddPartController extends MainViewController {
                 optionTextBox.getText());
     }
 
-    public int getHighestID(ObservableList<Part> partList) {
+    public int getHighestID(ObservableList<Part> part) {
         int max = 0;
-        for (Part i : partList) {
+        for (Part i : part) {
             if (i.getId() > max) {
                 max = i.getId();
             }
