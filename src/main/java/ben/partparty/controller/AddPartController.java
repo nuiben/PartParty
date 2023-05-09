@@ -34,16 +34,16 @@ public class AddPartController extends MainViewController {
         idCount = getHighestID(Inventory.getAllParts());
     }
 
-    public void OnOptionToggleIH(ActionEvent toggle) {
+    public void OnOptionToggleInHouse(ActionEvent toggle) {
         optionLabel.setText("Machine ID");
     }
 
-    public void OnOptionToggleOS(ActionEvent toggle) {
+    public void OnOptionToggleOutsourced(ActionEvent toggle) {
         optionLabel.setText("Company Name");
     }
 
     public void OnCancel(ActionEvent cancel) throws IOException {
-        setStage(cancel, fxmlLoad("/view/mainView.fxml"));
+        setStage(cancel, fxmlLoad("/view/MainView.fxml"));
     }
 
     public void OnSave(ActionEvent save) throws IOException {
@@ -56,11 +56,11 @@ public class AddPartController extends MainViewController {
                 throw new RuntimeException("Values must be non-negative.");
             } else {
                 if (optionOS.isSelected()) {
-                    Inventory.addPart(newOSPart());
+                    Inventory.addPart(newOutsourcedPart());
                 } else {
-                    Inventory.addPart(newIHPart());
+                    Inventory.addPart(newInHousePart());
                 }
-                setStage(save, fxmlLoad("/view/mainView.fxml"));
+                setStage(save, fxmlLoad("/view/MainView.fxml"));
             }
         }
         catch (Exception exception) {
@@ -69,10 +69,9 @@ public class AddPartController extends MainViewController {
             errorMessage.setContentText(exception.getMessage());
             errorMessage.show();
         }
-
     }
 
-    public Part newIHPart() {
+    public Part newInHousePart() {
         return new InHouse(
 //                Integer.parseInt(idTextBox.getText()),
                 ++idCount,
@@ -85,7 +84,7 @@ public class AddPartController extends MainViewController {
 
     }
 
-    public Part newOSPart() {
+    public Part newOutsourcedPart() {
         return new Outsourced(
 //                Integer.parseInt(idTextBox.getText()),
                 ++idCount,

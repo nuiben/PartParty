@@ -9,9 +9,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="628.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ben.partparty.controller.ModProdController">
+<AnchorPane prefHeight="628.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ben.partparty.controller.ModifyProductController">
    <children>
-      <Button fx:id="saveProdButton" layoutX="753.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnSave" text="Save" />
+      <Button fx:id="saveProdButton" layoutX="753.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnModifyProductSave" text="Save" />
       <Button fx:id="cancelBut" layoutX="812.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnCancel" text="Cancel" />
       <Label fx:id="modProdLabel" layoutX="55.0" layoutY="53.0" text="Modify Product">
          <font>
@@ -42,16 +42,16 @@
                 <TableColumn fx:id="partID" prefWidth="75.0" text="Part ID" />
                 <TableColumn fx:id="partName" prefWidth="75.0" text="Part Name" />
                   <TableColumn fx:id="partStock" prefWidth="133.0" text="Inventory Level" />
-                  <TableColumn fx:id="partCost" prefWidth="152.0" text="Price/Cost per Unit" />
+                  <TableColumn fx:id="partPrice" prefWidth="152.0" text="Price/Cost per Unit" />
               </columns>
             </TableView>
-            <Button fx:id="addAssocPartButton" layoutX="429.0" layoutY="253.0" mnemonicParsing="false" onAction="#OnAddAssocPart" text="Add" />
-            <TableView fx:id="assocPartTable" layoutX="32.0" layoutY="290.0" prefHeight="185.0" prefWidth="436.0">
+            <Button fx:id="addAssociatedPartButton" layoutX="429.0" layoutY="253.0" mnemonicParsing="false" onAction="#OnAddAssociatedPart" text="Add" />
+            <TableView fx:id="associatedPartTable" layoutX="32.0" layoutY="290.0" prefHeight="185.0" prefWidth="436.0">
                <columns>
-                  <TableColumn fx:id="assocPartID" prefWidth="75.0" text="Part ID" />
-                  <TableColumn fx:id="assocPartName" prefWidth="75.0" text="Part Name" />
-                  <TableColumn fx:id="assocPartStock" prefWidth="133.0" text="Inventory Level" />
-                  <TableColumn fx:id="assocPartCost" prefWidth="152.0" text="Price/Cost per Unit" />
+                  <TableColumn fx:id="associatedPartID" prefWidth="75.0" text="Part ID" />
+                  <TableColumn fx:id="associatedPartName" prefWidth="75.0" text="Part Name" />
+                  <TableColumn fx:id="associatedPartStock" prefWidth="133.0" text="Inventory Level" />
+                  <TableColumn fx:id="associatedPartPrice" prefWidth="152.0" text="Price/Cost per Unit" />
                </columns>
             </TableView>
          </children>

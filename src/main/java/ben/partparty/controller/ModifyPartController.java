@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ModPartController extends AddPartController {
+public class ModifyPartController extends AddPartController {
     public int selectedIndex;
     public Part selectedPart;
     public RadioButton optionOS;
@@ -40,10 +40,10 @@ public class ModPartController extends AddPartController {
         }
     }
 
-    public void OnSave(ActionEvent save) throws IOException {
+    public void OnModifyPartSave(ActionEvent save) throws IOException {
         try {
             Inventory.updatePart(selectedIndex, savePart(selectedPart));
-            setStage(save, fxmlLoad("/view/mainView.fxml"));
+            setStage(save, fxmlLoad("/view/MainView.fxml"));
         } catch (Exception exception) {
             Alert errorMessage = new Alert(Alert.AlertType.ERROR);
             errorMessage.setTitle("Invalid Input");
@@ -71,12 +71,12 @@ public class ModPartController extends AddPartController {
         if (optionOS.isSelected()) {
             try { ((Outsourced) part).setCompanyName(optionTextBox.getText()); }
             catch(ClassCastException exception) {
-                part = newOSPart();
+                part = newOutsourcedPart();
             }
         } else {
             try { ((InHouse) part).setMachineID(Integer.parseInt(optionTextBox.getText())); }
             catch(ClassCastException exception) {
-                part = newIHPart();
+                part = newInHousePart();
             }
         }
         return part;
