@@ -34,11 +34,11 @@ public class AddPartController extends MainViewController {
         idCount = getHighestID(Inventory.getAllParts());
     }
 
-    public void OnOptionToggleInHouse(ActionEvent toggle) {
+    public void OnOptionToggleInHouse() {
         optionLabel.setText("Machine ID");
     }
 
-    public void OnOptionToggleOutsourced(ActionEvent toggle) {
+    public void OnOptionToggleOutsourced() {
         optionLabel.setText("Company Name");
     }
 
@@ -46,7 +46,7 @@ public class AddPartController extends MainViewController {
         setStage(cancel, fxmlLoad("/view/MainView.fxml"));
     }
 
-    public void OnSave(ActionEvent save) throws IOException {
+    public void OnSave(ActionEvent save) {
         try{
             if (Integer.parseInt(minTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
                 throw new RuntimeException("Minimum value exceeds Maximum value.");

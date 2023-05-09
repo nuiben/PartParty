@@ -40,7 +40,7 @@ public class ModifyPartController extends AddPartController {
         }
     }
 
-    public void OnModifyPartSave(ActionEvent save) throws IOException {
+    public void OnModifyPartSave(ActionEvent save) {
         try {
             Inventory.updatePart(selectedIndex, savePart(selectedPart));
             setStage(save, fxmlLoad("/view/MainView.fxml"));

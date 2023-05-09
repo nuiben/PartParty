@@ -12,13 +12,12 @@
 <AnchorPane prefHeight="628.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ben.partparty.controller.AddProductController">
    <children>
       <Button fx:id="saveProdButton" layoutX="753.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnSaveProduct" text="Save" />
-      <Button fx:id="cancelBut" layoutX="818.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnCancel" text="Cancel" />
-      <Label fx:id="addProductLabel" layoutX="55.0" layoutY="53.0" text="Add Product">
+      <Button layoutX="818.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnCancel" text="Cancel" />
+      <Label layoutX="55.0" layoutY="53.0" text="Add Product">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
       <AnchorPane layoutX="42.0" layoutY="87.0" prefHeight="237.0" prefWidth="354.0">
-         <children>
             <TextField fx:id="idTextBox" layoutX="91.0" layoutY="19.0" translateX="20.0" />
             <TextField fx:id="nameTextBox" layoutX="91.0" layoutY="53.0" translateX="20.0" />
             <TextField fx:id="invTextBox" layoutX="91.0" layoutY="90.0" prefHeight="25.0" prefWidth="70.0" translateX="20.0" />
@@ -31,7 +30,6 @@
             <Text layoutX="14.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max" wrappingWidth="70.0" y="100.0" />
             <Text layoutX="215.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Min" wrappingWidth="33.607421875" y="100.0" />
             <TextField fx:id="minTextBox" layoutX="260.0" layoutY="160.0" prefHeight="25.0" prefWidth="70.0" />
-         </children>
       </AnchorPane>
       <AnchorPane layoutX="400.0" layoutY="30.0" prefHeight="530.0" prefWidth="492.0">
          <children>
@@ -42,7 +40,7 @@
                   <TableColumn fx:id="partID" prefWidth="75.0" text="Part ID" />
                   <TableColumn fx:id="partName" prefWidth="75.0" text="Part Name" />
                   <TableColumn fx:id="partStock" prefWidth="133.0" text="Inventory Level" />
-                  <TableColumn fx:id="partCost" prefWidth="152.0" text="Price/Cost per Unit" />
+                  <TableColumn fx:id="partPrice" prefWidth="152.0" text="Price/Cost per Unit" />
                </columns>
             </TableView>
             <Button fx:id="addAssociatedPartButton" layoutX="430.0" layoutY="253.0" mnemonicParsing="false" onAction="#OnAddAssociatedPart" text="Add" />
@@ -51,7 +49,7 @@
                   <TableColumn fx:id="associatedPartID" prefWidth="75.0" text="Part ID" />
                   <TableColumn fx:id="associatedPartName" prefWidth="75.0" text="Part Name" />
                   <TableColumn fx:id="associatedPartStock" prefWidth="133.0" text="Inventory Level" />
-                  <TableColumn fx:id="associatedPartCost" prefWidth="152.0" text="Price/Cost per Unit" />
+                  <TableColumn fx:id="associatedPartPrice" prefWidth="152.0" text="Price/Cost per Unit" />
                </columns>
             </TableView>
             <Label layoutX="32.0" layoutY="31.0" text="All Available Parts" />

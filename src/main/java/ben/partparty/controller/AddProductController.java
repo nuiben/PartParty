@@ -87,7 +87,7 @@ public class AddProductController extends AddPartController{
         }
     }
 
-    public void OnAddAssociatedPart(ActionEvent add) throws NumberFormatException {
+    public void OnAddAssociatedPart() throws NumberFormatException {
 
         if (product == null) {
             try {
@@ -121,12 +121,5 @@ public class AddProductController extends AddPartController{
         productToSave.setMax(Integer.parseInt(maxTextBox.getText()));
         productToSave.getAssociatedParts().addAll(temporaryAssociatedParts);
         return productToSave;
-    }
-
-    public void emptyFieldError() {
-        Alert errorMessage = new Alert(Alert.AlertType.ERROR);
-        errorMessage.setTitle("Error Message");
-        errorMessage.setContentText("NumberExceptionError: Check if you have an empty field.");
-        errorMessage.show();
     }
 }

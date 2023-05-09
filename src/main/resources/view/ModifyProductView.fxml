@@ -10,15 +10,13 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="628.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ben.partparty.controller.ModifyProductController">
-   <children>
       <Button fx:id="saveProdButton" layoutX="753.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnModifyProductSave" text="Save" />
-      <Button fx:id="cancelBut" layoutX="812.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnCancel" text="Cancel" />
-      <Label fx:id="modProdLabel" layoutX="55.0" layoutY="53.0" text="Modify Product">
+      <Button layoutX="812.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnCancel" text="Cancel" />
+      <Label layoutX="55.0" layoutY="53.0" text="Modify Product">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
       <AnchorPane layoutX="42.0" layoutY="87.0" prefHeight="237.0" prefWidth="354.0">
-         <children>
             <TextField fx:id="idTextBox" layoutX="91.0" layoutY="19.0" translateX="20.0" />
             <TextField fx:id="nameTextBox" layoutX="91.0" layoutY="53.0" translateX="20.0" />
             <TextField fx:id="invTextBox" layoutX="91.0" layoutY="90.0" prefHeight="25.0" prefWidth="70.0" translateX="20.0" />
@@ -31,10 +29,8 @@
             <Text layoutX="14.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max" wrappingWidth="70.0" y="100.0" />
             <Text layoutX="215.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Min" wrappingWidth="33.607421875" y="100.0" />
             <TextField fx:id="minTextBox" layoutX="260.0" layoutY="160.0" prefHeight="25.0" prefWidth="70.0" />
-         </children>
       </AnchorPane>
       <AnchorPane layoutX="397.0" layoutY="34.0" prefHeight="530.0" prefWidth="492.0">
-         <children>
             <TextField fx:id="partSearch" layoutX="320.0" layoutY="14.0" promptText="Search by Part ID or Name" />
             <Button layoutX="323.0" layoutY="491.0" mnemonicParsing="false" text="Remove Associated Part" />
             <TableView fx:id="partTable" layoutX="32.0" layoutY="56.0" prefHeight="185.0" prefWidth="436.0">
@@ -54,7 +50,5 @@
                   <TableColumn fx:id="associatedPartPrice" prefWidth="152.0" text="Price/Cost per Unit" />
                </columns>
             </TableView>
-         </children>
       </AnchorPane>
-   </children>
 </AnchorPane>
