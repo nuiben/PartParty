@@ -30,4 +30,4 @@ Contributions to Part Party are welcome those who request it. If you would like 
 Part Party is licensed under the MIT License.
 
 ---
-Disclaimer: This markdown file was generated using ChatGPT
+_Disclaimer: This markdown file was generated using ChatGPT_
