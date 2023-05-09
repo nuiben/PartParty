@@ -23,7 +23,7 @@
       </RadioButton>
       <RadioButton fx:id="optionOS" layoutX="272.0" layoutY="53.0" mnemonicParsing="false" onAction="#OnOptionToggleOutsourced" text="Outsourced" toggleGroup="$option" />
       <AnchorPane layoutX="42.0" layoutY="87.0" prefHeight="237.0" prefWidth="479.0">
-            <TextField fx:id="idTextBox" disable="true" layoutX="91.0" layoutY="19.0" text="Auto Gen- Disabled" translateX="20.0" />
+            <TextField fx:id="idTextBox" disable="true" layoutX="91.0" layoutY="19.0" translateX="20.0" />
             <TextField fx:id="nameTextBox" layoutX="91.0" layoutY="53.0" translateX="20.0" />
             <TextField fx:id="invTextBox" layoutX="91.0" layoutY="90.0" translateX="20.0" />
             <TextField fx:id="priceTextBox" layoutX="91.0" layoutY="124.0" translateX="20.0" />

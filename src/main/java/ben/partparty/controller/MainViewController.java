@@ -17,11 +17,11 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
 public class MainViewController implements Initializable {
-    // Main Screen Variables
     @FXML
     private TableView<Part> partTable;
     @FXML
@@ -50,9 +50,6 @@ public class MainViewController implements Initializable {
     private FilteredList<Part> filteredParts;
     private FilteredList<Product> filteredProducts;
 
-
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println(url);
@@ -67,17 +64,15 @@ public class MainViewController implements Initializable {
         partStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         filteredParts = new FilteredList<>(Inventory.getAllParts(), p -> true);
-        partSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredParts.setPredicate(part -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else return Integer.toString(part.getId()).contains(lowerCaseFilter);
-            });
-        });
+        partSearch.textProperty().addListener((observable, oldValue, newValue) -> filteredParts.setPredicate(part -> {
+            if (newValue == null || newValue.isEmpty()) {
+                return true;
+            }
+            String lowerCaseFilter = newValue.toLowerCase();
+            if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
+                return true;
+            } else return Integer.toString(part.getId()).contains(lowerCaseFilter);
+        }));
         SortedList<Part> sortedParts = new SortedList<>(filteredParts);
         sortedParts.comparatorProperty().bind(partTable.comparatorProperty());
         partTable.setItems(sortedParts);
@@ -89,17 +84,15 @@ public class MainViewController implements Initializable {
         productStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
         productPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         filteredProducts = new FilteredList<>(Inventory.getAllProducts(), p -> true);
-        productSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredProducts.setPredicate(product -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else return Integer.toString(product.getId()).contains(lowerCaseFilter);
-            });
-        });
+        productSearch.textProperty().addListener((observable, oldValue, newValue) -> filteredProducts.setPredicate(product -> {
+            if (newValue == null || newValue.isEmpty()) {
+                return true;
+            }
+            String lowerCaseFilter = newValue.toLowerCase();
+            if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
+                return true;
+            } else return Integer.toString(product.getId()).contains(lowerCaseFilter);
+        }));
         SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
         sortedProducts.comparatorProperty().bind(partTable.comparatorProperty());
         productTable.setItems(sortedProducts);
@@ -111,37 +104,51 @@ public class MainViewController implements Initializable {
         setStage(addProduct, fxmlLoad("/view/AddProductView.fxml"));
     }
 
-    public void OnModifyPart(ActionEvent modifyPart) throws IOException {
+    public void OnModifyPart(ActionEvent modifyPart) {
         try {
             FXMLLoader loader = fxmlLoad("/view/ModifyPartView.fxml");
             ((ModifyPartController) loader.getController()).passSelectedPart(partTable.getSelectionModel().getSelectedIndex(),partTable.getSelectionModel().getSelectedItem());
             setStage(modifyPart, loader);
-        } catch (NullPointerException exception) {
-            noSelectionError(exception);
+        } catch (Exception exception) {
+            displayErrorMessage(exception);
         }
     }
-    public void OnModifyProduct(ActionEvent modifyProduct) throws IOException {
+    public void OnModifyProduct(ActionEvent modifyProduct) {
         try {
             FXMLLoader loader = fxmlLoad("/view/ModifyProductView.fxml");
             ((ModifyProductController) loader.getController()).passSelectedProduct(productTable.getSelectionModel().getSelectedIndex(),productTable.getSelectionModel().getSelectedItem());
             setStage(modifyProduct, loader);
-        } catch (NullPointerException exception) {
-            noSelectionError(exception);
+        } catch (Exception exception) {
+            displayErrorMessage(exception);
         }
     }
 
     public void OnDeletePart() {
         try {
-            Inventory.deletePart(partTable.getSelectionModel().getSelectedItem());
-        } catch (NullPointerException exception) {
-            noSelectionError(exception);
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Delete Part");
+            confirmation.setContentText("Are you sure you want to delete this part?\n" + partTable.getSelectionModel().getSelectedItem().getName());
+            Optional<ButtonType> result = confirmation.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Inventory.deletePart(partTable.getSelectionModel().getSelectedItem());
+            }
+        } catch (Exception exception) {
+            displayErrorMessage(exception);
         }
     }
     public void OnDeleteProduct() {
         try {
-            Inventory.deleteProduct(productTable.getSelectionModel().getSelectedItem());
-        } catch (NullPointerException exception) {
-            noSelectionError(exception);
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Delete Product");
+            confirmation.setContentText("Are you sure you want to delete this product?\n" + productTable.getSelectionModel().getSelectedItem().getName());
+
+            Optional<ButtonType> result = confirmation.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Inventory.deleteProduct(productTable.getSelectionModel().getSelectedItem());
+            }
+
+        } catch (Exception exception) {
+            displayErrorMessage(exception);
         }
     }
     public void OnExitButtonClicked() {
@@ -149,20 +156,12 @@ public class MainViewController implements Initializable {
     }
 
     // Helper Functions
-    public void noSelectionError(Exception exception) {
+    public void displayErrorMessage(Exception exception) {
         Alert errorMessage = new Alert(Alert.AlertType.ERROR);
         errorMessage.setTitle("Error Message");
-        errorMessage.setContentText(exception.getMessage());
+        errorMessage.setContentText(exception.getClass() +"\n"+ exception.getMessage());
         errorMessage.show();
     }
-
-    public void emptyFieldError() {
-        Alert errorMessage = new Alert(Alert.AlertType.ERROR);
-        errorMessage.setTitle("Error Message");
-        errorMessage.setContentText("NumberExceptionError: Check if you have an empty field.");
-        errorMessage.show();
-    }
-
     public FXMLLoader fxmlLoad(String resource) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource(resource));
