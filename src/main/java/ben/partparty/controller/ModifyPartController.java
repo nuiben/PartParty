@@ -22,7 +22,6 @@ public class ModifyPartController extends AddPartController {
     }
 
     public void passSelectedPart(int idx, Part selection) {
-        System.out.println("Passed the Part: " + selection);
         selectedIndex = idx;
         selectedPart = selection;
         idTextBox.setText(String.valueOf(selection.getId()));

@@ -17,68 +17,30 @@ import java.util.ResourceBundle;
 
 public class AddProductController extends AddPartController {
 
+    private static final String[] COLUMNS = {"id", "name", "stock", "price"};
     public Button addAssociatedPartButton;
     public Button saveProdButton;
     @FXML
     private TableView<Part> partTable;
     @FXML
-    private TableColumn<Part, Integer> partID;
-    @FXML
-    private TableColumn<Part, String> partName;
-    @FXML
-    private TableColumn<Part, Integer> partStock;
-    @FXML
-    private TableColumn<Part, Double> partPrice;
-
-    @FXML
     private TableView<Part> associatedPartTable;
     @FXML
-    private TableColumn<Part, Integer> associatedPartID;
-    @FXML
-    private TableColumn<Part, String> associatedPartName;
-    @FXML
-    private TableColumn<Part, Integer> associatedPartStock;
-    @FXML
-    private TableColumn<Part, Double> associatedPartPrice;
-    @FXML
     private TextField partSearch;
-    @FXML
-    private FilteredList<Part> filteredParts;
     private ObservableList<Part> temporaryAssociatedParts = FXCollections.observableArrayList();
     public Product product;
     private int idCount;
     private int firstClickFlag = 0;
-    int col = 0;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println(url);
-        idCount = getHighestProductID(Inventory.getAllProducts());
+        ObservableList<Part> parts = Inventory.getAllParts();
+        idCount = getHighestID(parts);
         idTextBox.setText(String.valueOf(idCount + 1));
-        partTable.setItems(Inventory.getAllParts());
-        partID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        partPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        associatedPartID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        associatedPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        associatedPartStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        associatedPartPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        filteredParts = new FilteredList<>(Inventory.getAllParts(), p -> true);
-
-        partSearch.textProperty().addListener((observable, oldValue, newValue) -> filteredParts.setPredicate(part -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
-            String lowerCaseFilter = newValue.toLowerCase();
-            if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
-                System.out.println("ping " + col++);
-                return true;
-            } else return Integer.toString(part.getId()).contains(lowerCaseFilter);
-        }));
-        SortedList<Part> sortedParts = new SortedList<>(filteredParts);
-        sortedParts.comparatorProperty().bind(partTable.comparatorProperty());
-        partTable.setItems(sortedParts);
+        loadTable(parts, partTable, partSearch);
+        int index = 0;
+        for (String var : COLUMNS) {
+            associatedPartTable.getColumns().get(index++).setCellValueFactory(new PropertyValueFactory<>(var));
+        };
     }
 
 

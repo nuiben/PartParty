@@ -12,7 +12,9 @@ import java.io.IOException;
 /** This is the Main Class */
 public class Main extends Application {
 
-    /** This is the first method that gets called*/
+    /** Program Loads in Sample Inputs for InHouse, OutSourced, and Product then launches application.
+     * @param args
+     * */
     public static void main(String[] args) {
         String[] words = {"Widget", "Gadget", "Transformer", "Conduit", "Assembly", "Pulley", "Gizmo", "Apparatus",
                 "Oscillator", "Resistor", "Diode", "Inverter", "Switch", "Mechanism", "Valve", "Relay", "Pump",
@@ -29,20 +31,20 @@ public class Main extends Application {
                 "High-precision Sensors", "5G Connectivity", "Data-Driven",
                 "Self-Learning"};
 
-        for (int i = 0; i < 4; i++ ) {
-            System.out.println(i);
+        for (int i = 0; i < 3; i++ ) {
             String InHouseName = words[(int)(Math.random() * words.length)];
-            System.out.println(InHouseName);
             String OutsourcedName = words[(int)(Math.random() * words.length)];
-            System.out.println(OutsourcedName);
             String ProductName = techBuzzwords[(int)(Math.random() * techBuzzwords.length)] + " " + words[(int)(Math.random() * words.length)];
-            System.out.println(ProductName);
             Inventory.addPart(new InHouse(i+1, InHouseName, (int)(Math.random()*10) + 0.99, 10, 0, 50, 101044));
-            Inventory.addPart(new Outsourced(i+100, OutsourcedName, (int)(Math.random()*10) + 0.99, 150, 50, 200, "OmegaMart & Subsidiaries"));
-            Inventory.addProduct(new Product(i+1000, ProductName, (int)(Math.random()*100) + 0.99, 8, 0, 20));
+            Inventory.addPart(new Outsourced(i+4, OutsourcedName, (int)(Math.random()*10) + 0.99, 150, 50, 200, "OmegaMart & Subsidiaries"));
+            Inventory.addProduct(new Product(i+100, ProductName, (int)(Math.random()*100) + 0.99, 8, 0, 20));
         }
         launch(args);
     }
+
+    /** Loads in MainView.fxml file and displays on the screen
+     * @params stage
+     * */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
@@ -52,8 +54,7 @@ public class Main extends Application {
         stage.show();
     }
 
-
-
+    /** Only Used by "Exit" button on Main View */
     public static void quit() {
         Platform.exit();
     }

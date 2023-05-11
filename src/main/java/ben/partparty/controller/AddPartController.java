@@ -47,6 +47,9 @@ public class AddPartController extends MainViewController {
         setStage(cancel, fxmlLoad("/view/MainView.fxml"));
     }
 
+    /** When Save Button is clicked
+     // @param ActionEvent save
+     * */
     public void OnSave(ActionEvent save) {
         try{
             if (Integer.parseInt(minTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
@@ -72,6 +75,12 @@ public class AddPartController extends MainViewController {
         }
     }
 
+    /** Creates a new InHouse Part based on the field values of the
+     *  current scene.
+     * @
+     * @param idCount
+     * @return InHouse
+     * */
     public Part newInHousePart(int idCount) {
         return new InHouse(
                 ++idCount,
@@ -84,6 +93,12 @@ public class AddPartController extends MainViewController {
 
     }
 
+    /** Creates a new Outsourced Part based on the field values of the
+     *  current scene.
+     * @
+     * @param idCount
+     * @return Outsourced
+     * */
     public Part newOutsourcedPart(int idCount) {
         return new Outsourced(
                 ++idCount,
@@ -95,6 +110,10 @@ public class AddPartController extends MainViewController {
                 optionTextBox.getText());
     }
 
+    /** Returns the current highest ID value of provided Parts List
+     * @param part
+     * @return max
+     * */
     public int getHighestID(ObservableList<Part> part) {
         int max = 0;
         for (Part i : part) {

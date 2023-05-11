@@ -2,51 +2,82 @@ package ben.partparty.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 
+/**
+ * Inventory Class
+ */
 public class Inventory {
 
     private static ObservableList<Part> allParts = FXCollections.observableArrayList();
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
+    /**
+     * Insert a Part object into observable list of type Part
+     * @param newPart
+     */
     public static void addPart(Part newPart) {
         allParts.add(newPart);
     }
 
+    /**
+     * Insert a Product object into observable list of type Product
+     * @param newProduct
+     */
     public static void addProduct(Product newProduct) {
         allProducts.add(newProduct);
     }
 
-    public static Part lookupPart(int partID) throws IOException {
-        for (Part targetPart : Inventory.getAllParts()) {
-            while (targetPart.getId() != partID) {
+    /**
+     * Currently being handled by lambda function in MainViewController
+     * @param partId the integer value of the Part's Id
+     */
+    public static Part lookupPart(int partId) {
+        for (Part targetPart : getAllParts()) {
+            if (targetPart.getId() == partId) {
                 return targetPart;
             }
         }
         return null;
     }
 
-    public static Product lookupProduct(int productID) {
-        for (Product targetProduct : Inventory.getAllProducts()) {
-            while (targetProduct.getId() != productID) {
-                return targetProduct;
-            }
-        }
-        return null;
-    }
-
-    public static Part lookupPart(String partName) throws IOException {
-        for (Part targetPart : Inventory.getAllParts()) {
-            while (!targetPart.getName().equals(partName)) {
+    /**
+     * Currently being handled by lambda function in MainViewController
+     * @param partName the String Value of the Part's Name
+     */
+    public static Part lookupPart(String partName) {
+        for (Part targetPart : getAllParts()) {
+            if (targetPart.getName().equals(partName)) {
                 return targetPart;
             }
         }
         return null;
     }
 
+    /**
+     * Currently being handled by lambda function in MainViewController
+     * @param productId the integer value of the Part's Id
+     */
+    public static Part lookupProduct(int productId) {
+        for (Part targetPart : getAllParts()) {
+            if (targetPart.getId() == productId) {
+                return targetPart;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Currently being handled by lambda function in MainViewController
+     * @param productName
+     */
     public static Part lookupProduct(String productName) throws IOException {
-        for (Part targetProduct : Inventory.getAllParts()) {
-            while (!targetProduct.getName().equals(productName)) {
+        for (Part targetProduct : getAllParts()) {
+            if (targetProduct.getName().equals(productName)) {
                 return targetProduct;
             }
         }

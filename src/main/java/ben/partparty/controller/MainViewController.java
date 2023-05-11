@@ -2,6 +2,7 @@ package ben.partparty.controller;
 
 import ben.partparty.main.Main;
 import ben.partparty.model.*;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -20,82 +21,47 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-
+/** Primary Controller - Initiates Child Controllers to handle each FXML file in the view directory.
+ *  The decision to use inheritance for the Controller, is due to the constraints placed by JavaFX.
+ *  A Controller would normally handle all endpoints between the User (Client) and Model (Server), but
+ *  FXML files load new instances of the controller, making inheritance necessary for the different
+ *  instances to interface and share data.
+ *  */
 public class MainViewController implements Initializable {
     @FXML
     private TableView<Part> partTable;
     @FXML
-    private TableColumn<Part, Integer> partID;
-    @FXML
-    private TableColumn<Part, String> partName;
-    @FXML
-    private TableColumn<Part, Integer> partStock;
-    @FXML
-    private TableColumn<Part, Double> partPrice;
-    @FXML
     private TableView<Product> productTable;
-    @FXML
-    private TableColumn<Part, Integer> productID;
-    @FXML
-    private TableColumn<Part, String> productName;
-    @FXML
-    private TableColumn<Part, Integer> productStock;
-    @FXML
-    private TableColumn<Part, Double> productPrice;
     @FXML
     private TextField partSearch;
     @FXML
     private TextField productSearch;
-    @FXML
-    private FilteredList<Part> filteredParts;
-    private FilteredList<Product> filteredProducts;
+    private final String[] COLUMNS = {"id", "name", "stock", "price"};
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println(url);
-        if (partTable != null) { loadPartTable();}
-        if (productTable != null) { loadProductTable(); }
+        if (partTable != null) { loadTable(Inventory.getAllParts(), partTable, partSearch);}
+        if (productTable != null) { loadTable(Inventory.getAllProducts(), productTable, productSearch); }
     }
 
-    public void loadPartTable() {
-        partTable.setItems(Inventory.getAllParts());
-        partID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        partPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        filteredParts = new FilteredList<>(Inventory.getAllParts(), p -> true);
-        partSearch.textProperty().addListener((observable, oldValue, newValue) -> filteredParts.setPredicate(part -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
+    /** Loads a Table and it's search bar
+     * */
+    public <E extends Part> void loadTable(ObservableList<E> items, TableView<E> table, TextField searchBox) {
+        table.setItems(items);
+        int index = 0;
+        for (String var : COLUMNS) {
+            table.getColumns().get(index++).setCellValueFactory(new PropertyValueFactory<>(var));
+        }
+        FilteredList<E> filteredItems = new FilteredList<>(table.getItems(), p -> true);
+        searchBox.textProperty().addListener((observable, oldValue, newValue) -> filteredItems.setPredicate(item -> {
+            if (newValue == null || newValue.isEmpty()) { return true; }
             String lowerCaseFilter = newValue.toLowerCase();
-            if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
-                return true;
-            } else return Integer.toString(part.getId()).contains(lowerCaseFilter);
-        }));
-        SortedList<Part> sortedParts = new SortedList<>(filteredParts);
-        sortedParts.comparatorProperty().bind(partTable.comparatorProperty());
-        partTable.setItems(sortedParts);
-    }
-    public void loadProductTable() {
-        productTable.setItems(Inventory.getAllProducts());
-        productID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        productName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        productPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        filteredProducts = new FilteredList<>(Inventory.getAllProducts(), p -> true);
-        productSearch.textProperty().addListener((observable, oldValue, newValue) -> filteredProducts.setPredicate(product -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
-            String lowerCaseFilter = newValue.toLowerCase();
-            if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
-                return true;
-            } else return Integer.toString(product.getId()).contains(lowerCaseFilter);
-        }));
-        SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
-        sortedProducts.comparatorProperty().bind(partTable.comparatorProperty());
-        productTable.setItems(sortedProducts);
+            if (item.getName().toLowerCase().contains(lowerCaseFilter)) { return true; }
+            else return Integer.toString(item.getId()).contains(lowerCaseFilter);}));
+        SortedList<E> sortedItems = new SortedList<>(filteredItems);
+        sortedItems.comparatorProperty().bind(partTable.comparatorProperty());
+        table.setItems(sortedItems);
     }
     public void OnAddPart(ActionEvent addPart) throws IOException {
         setStage(addPart, fxmlLoad("/view/AddPartView.fxml"));
@@ -105,55 +71,47 @@ public class MainViewController implements Initializable {
     }
 
     public void OnModifyPart(ActionEvent modifyPart) {
-        try {
-            FXMLLoader loader = fxmlLoad("/view/ModifyPartView.fxml");
-            ((ModifyPartController) loader.getController()).passSelectedPart(partTable.getSelectionModel().getSelectedIndex(),partTable.getSelectionModel().getSelectedItem());
-            setStage(modifyPart, loader);
-        } catch (Exception exception) {
-            displayErrorMessage(exception);
-        }
+        modifyItem(partTable, "/view/ModifyPartView.fxml", modifyPart);
     }
     public void OnModifyProduct(ActionEvent modifyProduct) {
+        modifyItem(productTable, "/view/ModifyProductView.fxml", modifyProduct);
+    }
+    // public <T extends Part> void deleteItem(TableView<T> table) {
+    public <T extends Part> void modifyItem(TableView<T> table, String resource, ActionEvent event) {
         try {
-            FXMLLoader loader = fxmlLoad("/view/ModifyProductView.fxml");
-            ((ModifyProductController) loader.getController()).passSelectedProduct(productTable.getSelectionModel().getSelectedIndex(),productTable.getSelectionModel().getSelectedItem());
-            setStage(modifyProduct, loader);
+            FXMLLoader loader = fxmlLoad(resource);
+            if (table.getSelectionModel().getSelectedItem() instanceof Product) {
+                ((ModifyProductController) loader.getController()).passSelectedProduct(table.getSelectionModel().getSelectedIndex(),
+                        (Product) table.getSelectionModel().getSelectedItem());
+            } else {
+                ((ModifyPartController) loader.getController()).passSelectedPart(table.getSelectionModel().getSelectedIndex(),
+                        table.getSelectionModel().getSelectedItem());
+            }
+            setStage(event, loader);
         } catch (Exception exception) {
             displayErrorMessage(exception);
         }
     }
-
-    public void OnDeletePart() {
+    public void OnDeletePart() { deleteItem(partTable); }
+    public void OnDeleteProduct() { deleteItem(productTable); }
+    public <T extends Part> void deleteItem(TableView<T> table) {
         try {
             Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmation.setTitle("Delete Part");
-            confirmation.setContentText("Are you sure you want to delete this part?\n" + partTable.getSelectionModel().getSelectedItem().getName());
+            confirmation.setTitle("Delete Item");
+            confirmation.setContentText("Are you sure you want to delete this item?\n" + table.getSelectionModel().getSelectedItem().getName());
             Optional<ButtonType> result = confirmation.showAndWait();
             if (result.get() == ButtonType.OK) {
-                Inventory.deletePart(partTable.getSelectionModel().getSelectedItem());
+                if (table.getSelectionModel().getSelectedItem() instanceof Product){
+                    Inventory.deleteProduct((Product) table.getSelectionModel().getSelectedItem());
+                } else {
+                    Inventory.deletePart(table.getSelectionModel().getSelectedItem());
+                }
             }
         } catch (Exception exception) {
             displayErrorMessage(exception);
         }
     }
-    public void OnDeleteProduct() {
-        try {
-            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmation.setTitle("Delete Product");
-            confirmation.setContentText("Are you sure you want to delete this product?\n" + productTable.getSelectionModel().getSelectedItem().getName());
-
-            Optional<ButtonType> result = confirmation.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                Inventory.deleteProduct(productTable.getSelectionModel().getSelectedItem());
-            }
-
-        } catch (Exception exception) {
-            displayErrorMessage(exception);
-        }
-    }
-    public void OnExitButtonClicked() {
-        Main.quit();
-    }
+    public void OnExitButtonClicked() { Main.quit(); }
 
     // Helper Functions
     public void displayErrorMessage(Exception exception) {
@@ -162,6 +120,13 @@ public class MainViewController implements Initializable {
         errorMessage.setContentText(exception.getClass() +"\n"+ exception.getMessage());
         errorMessage.show();
     }
+
+    /** Loads an FXML file given a provided resource.
+     *
+     * @param resource String
+     * @return fxmlLoader FXMLLoader
+     * @throws IOException
+     */
     public FXMLLoader fxmlLoad(String resource) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource(resource));
@@ -174,7 +139,4 @@ public class MainViewController implements Initializable {
         stage.setScene(new Scene(loader.getRoot()));
         stage.show();
     }
-
-
-
 }
