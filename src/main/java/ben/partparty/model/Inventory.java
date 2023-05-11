@@ -26,7 +26,7 @@ public class Inventory {
 
     /**
      * Insert a Product object into observable list of type Product
-     * @param newProduct
+     * @param newProduct the product being added to the ObservableList
      */
     public static void addProduct(Product newProduct) {
         allProducts.add(newProduct);

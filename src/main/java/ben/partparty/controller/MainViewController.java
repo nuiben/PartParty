@@ -69,23 +69,21 @@ public class MainViewController implements Initializable {
     public void OnAddProduct(ActionEvent addProduct) throws IOException {
         setStage(addProduct, fxmlLoad("/view/AddProductView.fxml"));
     }
-
     public void OnModifyPart(ActionEvent modifyPart) {
-        modifyItem(partTable, "/view/ModifyPartView.fxml", modifyPart);
+        modifyItem(partTable, modifyPart, "/view/ModifyPartView.fxml");
     }
     public void OnModifyProduct(ActionEvent modifyProduct) {
-        modifyItem(productTable, "/view/ModifyProductView.fxml", modifyProduct);
+        modifyItem(productTable, modifyProduct, "/view/ModifyProductView.fxml");
     }
-    // public <T extends Part> void deleteItem(TableView<T> table) {
-    public <T extends Part> void modifyItem(TableView<T> table, String resource, ActionEvent event) {
+    public <T extends Part> void modifyItem(TableView<T> table, ActionEvent event, String resource) {
         try {
             FXMLLoader loader = fxmlLoad(resource);
-            if (table.getSelectionModel().getSelectedItem() instanceof Product) {
-                ((ModifyProductController) loader.getController()).passSelectedProduct(table.getSelectionModel().getSelectedIndex(),
-                        (Product) table.getSelectionModel().getSelectedItem());
+            int selectedIndex = table.getSelectionModel().getSelectedIndex();
+            T item = table.getSelectionModel().getSelectedItem();
+            if (item instanceof Product) {
+                ((ModifyProductController) loader.getController()).passSelectedProduct(selectedIndex, (Product) item);
             } else {
-                ((ModifyPartController) loader.getController()).passSelectedPart(table.getSelectionModel().getSelectedIndex(),
-                        table.getSelectionModel().getSelectedItem());
+                ((ModifyPartController) loader.getController()).passSelectedPart(selectedIndex, item);
             }
             setStage(event, loader);
         } catch (Exception exception) {
@@ -96,20 +94,19 @@ public class MainViewController implements Initializable {
     public void OnDeleteProduct() { deleteItem(productTable); }
     public <T extends Part> void deleteItem(TableView<T> table) {
         try {
-            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmation.setTitle("Delete Item");
-            confirmation.setContentText("Are you sure you want to delete this item?\n" + table.getSelectionModel().getSelectedItem().getName());
-            Optional<ButtonType> result = confirmation.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                if (table.getSelectionModel().getSelectedItem() instanceof Product){
+            if (displayConfirmation(table).get() == ButtonType.OK) {
+                if (table.getSelectionModel().getSelectedItem() instanceof Product) {
                     Inventory.deleteProduct((Product) table.getSelectionModel().getSelectedItem());
-                } else {
+                }
+                else {
                     Inventory.deletePart(table.getSelectionModel().getSelectedItem());
                 }
             }
-        } catch (Exception exception) {
+        }
+        catch(Exception exception) {
             displayErrorMessage(exception);
         }
+
     }
     public void OnExitButtonClicked() { Main.quit(); }
 
@@ -119,6 +116,14 @@ public class MainViewController implements Initializable {
         errorMessage.setTitle("Error Message");
         errorMessage.setContentText(exception.getClass() +"\n"+ exception.getMessage());
         errorMessage.show();
+    }
+
+    public <T extends Part> Optional<ButtonType> displayConfirmation(TableView<T> table) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Delete Item");
+        confirmation.setContentText("Are you sure you want to delete this item?\n" +
+                table.getSelectionModel().getSelectedItem().getName());
+        return confirmation.showAndWait();
     }
 
     /** Loads an FXML file given a provided resource.

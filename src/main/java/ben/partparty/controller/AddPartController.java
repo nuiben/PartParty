@@ -51,21 +51,15 @@ public class AddPartController extends MainViewController {
      // @param ActionEvent save
      * */
     public void OnSave(ActionEvent save) {
-        try{
-            if (Integer.parseInt(minTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
-                throw new RuntimeException("Minimum value exceeds Maximum value.");
-            } else if (Integer.parseInt(invTextBox.getText()) < Integer.parseInt(minTextBox.getText()) || Integer.parseInt(invTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
-                throw new RuntimeException("Inventory must be between Minimum and Maximum values.");
-            } else if (Integer.parseInt(invTextBox.getText()) < 0 || Integer.parseInt(minTextBox.getText()) < 0 || Integer.parseInt(maxTextBox.getText()) < 0 || Double.parseDouble(priceTextBox.getText()) < 0) {
-                throw new RuntimeException("Values must be non-negative.");
-            } else {
-                if (optionOS.isSelected()) {
-                    Inventory.addPart(newOutsourcedPart(idCount));
-                } else {
-                    Inventory.addPart(newInHousePart(idCount));
-                }
-                setStage(save, fxmlLoad("/view/MainView.fxml"));
+        try {
+            testFields();
+            if (optionOS.isSelected()) {
+                Inventory.addPart(newPart(idCount));
             }
+            else {
+                Inventory.addPart(newPart(idCount));
+            }
+            setStage(save, fxmlLoad("/view/MainView.fxml"));
         }
         catch (Exception exception) {
             Alert errorMessage = new Alert(Alert.AlertType.ERROR);
@@ -75,39 +69,36 @@ public class AddPartController extends MainViewController {
         }
     }
 
-    /** Creates a new InHouse Part based on the field values of the
-     *  current scene.
-     * @
-     * @param idCount
-     * @return InHouse
-     * */
-    public Part newInHousePart(int idCount) {
-        return new InHouse(
-                ++idCount,
-                nameTextBox.getText(),
-                Double.parseDouble(priceTextBox.getText()),
-                Integer.parseInt(invTextBox.getText()),
-                Integer.parseInt(minTextBox.getText()),
-                Integer.parseInt(maxTextBox.getText()),
-                Integer.parseInt(optionTextBox.getText()));
-
+    public void testFields() {
+        if (Integer.parseInt(minTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
+            throw new RuntimeException("Minimum value exceeds Maximum value.");
+        }
+        else if (Integer.parseInt(invTextBox.getText()) < Integer.parseInt(minTextBox.getText()) || Integer.parseInt(invTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
+            throw new RuntimeException("Inventory must be between Minimum and Maximum values.");
+        }
+        else if (Integer.parseInt(invTextBox.getText()) < 0 || Integer.parseInt(minTextBox.getText()) < 0 || Integer.parseInt(maxTextBox.getText()) < 0 || Double.parseDouble(priceTextBox.getText()) < 0) {
+            throw new RuntimeException("Values must be non-negative.");
+        }
     }
 
     /** Creates a new Outsourced Part based on the field values of the
      *  current scene.
      * @
      * @param idCount
-     * @return Outsourced
+     * @return Part A new Outsourced or InHouse part depending on the toggle status of the Option Button
      * */
-    public Part newOutsourcedPart(int idCount) {
-        return new Outsourced(
-                ++idCount,
-                nameTextBox.getText(),
-                Double.parseDouble(priceTextBox.getText()),
-                Integer.parseInt(invTextBox.getText()),
-                Integer.parseInt(minTextBox.getText()),
-                Integer.parseInt(maxTextBox.getText()),
-                optionTextBox.getText());
+    public Part newPart(int idCount) {
+        int id = ++idCount;
+        String name = nameTextBox.getText();
+        double price = Double.parseDouble(priceTextBox.getText());
+        int stock = Integer.parseInt(invTextBox.getText());
+        int min = Integer.parseInt(minTextBox.getText());
+        int max = Integer.parseInt(maxTextBox.getText());
+        if (optionOS.isSelected()) {
+            return new Outsourced(id, name, price, stock, min, max, optionTextBox.getText());
+        } else {
+            return new InHouse(id, name, price, stock, min, max,Integer.parseInt(optionTextBox.getText()));
+        }
     }
 
     /** Returns the current highest ID value of provided Parts List

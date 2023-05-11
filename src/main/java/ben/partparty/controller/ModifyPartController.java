@@ -15,7 +15,6 @@ public class ModifyPartController extends AddPartController {
     public int selectedIndex;
     public Part selectedPart;
     public RadioButton optionOS;
-    private int idCount;
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Path Loaded from source: " + url);
@@ -51,28 +50,20 @@ public class ModifyPartController extends AddPartController {
         part.setId(Integer.parseInt(idTextBox.getText()));
         part.setName(nameTextBox.getText());
         part.setPrice(Double.parseDouble(priceTextBox.getText()));
-
-        if (Integer.parseInt(minTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
-            throw new RuntimeException("Minimum value exceeds Maximum value.");
-        } else if (Integer.parseInt(invTextBox.getText()) < Integer.parseInt(minTextBox.getText()) || Integer.parseInt(invTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
-            throw new RuntimeException("Inventory must be between Minimum and Maximum values.");
-        } else if (Integer.parseInt(invTextBox.getText()) < 0 || Integer.parseInt(minTextBox.getText()) < 0 || Integer.parseInt(maxTextBox.getText()) < 0 || Double.parseDouble(priceTextBox.getText()) < 0) {
-            throw new RuntimeException("Values must be non-negative.");
-        } else {
-            part.setMin(Integer.parseInt(minTextBox.getText()));
-            part.setMax(Integer.parseInt(maxTextBox.getText()));
-            part.setStock(Integer.parseInt(invTextBox.getText()));
+        testFields();
+        part.setMin(Integer.parseInt(minTextBox.getText()));
+        part.setMax(Integer.parseInt(maxTextBox.getText()));
+        part.setStock(Integer.parseInt(invTextBox.getText()));
+        try {
+            if (optionOS.isSelected()) {
+                ((Outsourced) part).setCompanyName(optionTextBox.getText());
+            }
+            else {
+                ((InHouse) part).setMachineID(Integer.parseInt(optionTextBox.getText()));
+            }
         }
-        if (optionOS.isSelected()) {
-            try { ((Outsourced) part).setCompanyName(optionTextBox.getText()); }
-            catch(ClassCastException exception) {
-                part = newOutsourcedPart(getHighestID(Inventory.getAllParts()));
-            }
-        } else {
-            try { ((InHouse) part).setMachineID(Integer.parseInt(optionTextBox.getText())); }
-            catch(ClassCastException exception) {
-                part = newInHousePart(getHighestID(Inventory.getAllParts()));
-            }
+        catch(ClassCastException exception) {
+            part = newPart(part.getId() - 1);
         }
         return part;
     }
