@@ -11,25 +11,31 @@ import javafx.scene.control.RadioButton;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * ModifyPartController Class
+ */
 public class ModifyPartController extends AddPartController {
     public int selectedIndex;
     public Part selectedPart;
     public RadioButton optionOS;
-    private int idCount;
+
+    /**
+     * Initializes - performs near identically to AddPartController
+     */
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("Path Loaded from source: " + url);
+        System.out.println(url);
     }
 
-    public void passSelectedPart(int idx, Part selection) {
-        selectedIndex = idx;
+    /**
+     * Called from MainViewController, updates field values to match Part variables and type.
+     * @param index integer value of the selected Part.
+     * @param selection Part object selected to modify.
+     */
+    public void passSelectedPart(int index, Part selection) {
+        selectedIndex = index;
         selectedPart = selection;
-        idTextBox.setText(String.valueOf(selection.getId()));
-        nameTextBox.setText(String.valueOf(selection.getName()));
-        invTextBox.setText(String.valueOf(selection.getStock()));
-        priceTextBox.setText(String.valueOf(selection.getPrice()));
-        maxTextBox.setText(String.valueOf(selection.getMax()));
-        minTextBox.setText(String.valueOf(selection.getMin()));
+        setFields(selection);
         if (selection instanceof Outsourced) {
             optionOS.fire();
             optionTextBox.setText(String.valueOf(((Outsourced) selection).getCompanyName()));
@@ -38,43 +44,17 @@ public class ModifyPartController extends AddPartController {
         }
     }
 
+    /**
+     * Event Handler for Save Button
+     * @param save Action event used by FXMLloader
+     */
     public void OnModifyPartSave(ActionEvent save) {
         try {
-            Inventory.updatePart(selectedIndex, savePart(selectedPart));
-            setStage(save, fxmlLoad("/view/MainView.fxml"));
+            Inventory.updatePart(selectedIndex, saveItem(selectedPart));
+            loadFXML(save, "/view/MainView.fxml");
         } catch (Exception exception) {
             displayErrorMessage(exception);
         }
-    }
-
-    public Part savePart(Part part) {
-        part.setId(Integer.parseInt(idTextBox.getText()));
-        part.setName(nameTextBox.getText());
-        part.setPrice(Double.parseDouble(priceTextBox.getText()));
-
-        if (Integer.parseInt(minTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
-            throw new RuntimeException("Minimum value exceeds Maximum value.");
-        } else if (Integer.parseInt(invTextBox.getText()) < Integer.parseInt(minTextBox.getText()) || Integer.parseInt(invTextBox.getText()) > Integer.parseInt(maxTextBox.getText())) {
-            throw new RuntimeException("Inventory must be between Minimum and Maximum values.");
-        } else if (Integer.parseInt(invTextBox.getText()) < 0 || Integer.parseInt(minTextBox.getText()) < 0 || Integer.parseInt(maxTextBox.getText()) < 0 || Double.parseDouble(priceTextBox.getText()) < 0) {
-            throw new RuntimeException("Values must be non-negative.");
-        } else {
-            part.setMin(Integer.parseInt(minTextBox.getText()));
-            part.setMax(Integer.parseInt(maxTextBox.getText()));
-            part.setStock(Integer.parseInt(invTextBox.getText()));
-        }
-        if (optionOS.isSelected()) {
-            try { ((Outsourced) part).setCompanyName(optionTextBox.getText()); }
-            catch(ClassCastException exception) {
-                part = newOutsourcedPart(getHighestID(Inventory.getAllParts()));
-            }
-        } else {
-            try { ((InHouse) part).setMachineID(Integer.parseInt(optionTextBox.getText())); }
-            catch(ClassCastException exception) {
-                part = newInHousePart(getHighestID(Inventory.getAllParts()));
-            }
-        }
-        return part;
     }
 
 }

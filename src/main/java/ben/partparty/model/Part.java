@@ -4,7 +4,6 @@ package ben.partparty.model;
  */
 
 /**
- *
  * @author Benjamin Porter
  */
 

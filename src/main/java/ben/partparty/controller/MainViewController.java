@@ -26,6 +26,8 @@ import java.util.ResourceBundle;
  *  A Controller would normally handle all endpoints between the User (Client) and Model (Server), but
  *  FXML files load new instances of the controller, making inheritance necessary for the different
  *  instances to interface and share data.
+ *  MainViewController -> AddPartController -> AddProductController -> ModifyProductController
+ *                                ^-> ModifyPartController
  *  */
 public class MainViewController implements Initializable {
     @FXML
@@ -41,79 +43,86 @@ public class MainViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println(url);
-        if (partTable != null) { loadTable(Inventory.getAllParts(), partTable, partSearch);}
-        if (productTable != null) { loadTable(Inventory.getAllProducts(), productTable, productSearch); }
+        if (partTable != null) { loadTable(partTable);}
+        if (productTable != null) { loadTable(productTable); }
     }
 
-    /** Loads a Table and it's search bar
+    /** Loads a TableView, binds contents to a SortedList which displays
+     *  Search Results input to Table's search bar.
+     * @param table TableView to be loaded
      * */
-    public <E extends Part> void loadTable(ObservableList<E> items, TableView<E> table, TextField searchBox) {
-        table.setItems(items);
+    public <E extends Part> void loadTable(TableView<E> table) {
+        TextField searchBar = partSearch;
+        if (table.getId().contains("part")) {
+            table.setItems((ObservableList<E>) Inventory.getAllParts());
+        } else {
+            table.setItems((ObservableList<E>) Inventory.getAllProducts());
+            searchBar = productSearch;
+        }
         int index = 0;
         for (String var : COLUMNS) {
             table.getColumns().get(index++).setCellValueFactory(new PropertyValueFactory<>(var));
         }
         FilteredList<E> filteredItems = new FilteredList<>(table.getItems(), p -> true);
-        searchBox.textProperty().addListener((observable, oldValue, newValue) -> filteredItems.setPredicate(item -> {
-            if (newValue == null || newValue.isEmpty()) { return true; }
-            String lowerCaseFilter = newValue.toLowerCase();
-            if (item.getName().toLowerCase().contains(lowerCaseFilter)) { return true; }
-            else return Integer.toString(item.getId()).contains(lowerCaseFilter);}));
+        searchBar.textProperty().addListener((input, previousInput, newInput) -> filteredItems.setPredicate(item -> {
+            if (newInput == null || newInput.isEmpty()) { return true; }
+            String lowerCase = newInput.toLowerCase();
+            if (item.getName().toLowerCase().contains(lowerCase)) { return true; }
+            else return Integer.toString(item.getId()).contains(lowerCase);}));
         SortedList<E> sortedItems = new SortedList<>(filteredItems);
-        sortedItems.comparatorProperty().bind(partTable.comparatorProperty());
+        sortedItems.comparatorProperty().bind(table.comparatorProperty());
         table.setItems(sortedItems);
     }
-    public void OnAddPart(ActionEvent addPart) throws IOException {
-        setStage(addPart, fxmlLoad("/view/AddPartView.fxml"));
-    }
-    public void OnAddProduct(ActionEvent addProduct) throws IOException {
-        setStage(addProduct, fxmlLoad("/view/AddProductView.fxml"));
-    }
 
-    public void OnModifyPart(ActionEvent modifyPart) {
-        modifyItem(partTable, "/view/ModifyPartView.fxml", modifyPart);
+    /** Loads AddPartView when addPart button is clicked.
+     * @param addPart ActionEvent containing UID of a click on Add button underneath Part Table
+     * */
+    public void OnAddPart(ActionEvent addPart) throws IOException {
+        loadFXML(addPart, "/view/AddPartView.fxml");
     }
-    public void OnModifyProduct(ActionEvent modifyProduct) {
-        modifyItem(productTable, "/view/ModifyProductView.fxml", modifyProduct);
+    /** Loads AddProductView when addPart button is clicked.
+     * @param addProduct ActionEvent containing UID of a click on Add button underneath Product Table
+     * */
+    public void OnAddProduct(ActionEvent addProduct) throws IOException {
+        loadFXML(addProduct, "/view/AddProductView.fxml");
     }
-    // public <T extends Part> void deleteItem(TableView<T> table) {
-    public <T extends Part> void modifyItem(TableView<T> table, String resource, ActionEvent event) {
+    /** Loads ModifyProductView or ModifyPartView depending on which is clicked.
+     * @param modifyEvent ActionEvent containing UID of click, allows method to determine which view to open
+     * */
+    public void OnModifyItem(ActionEvent modifyEvent) {
         try {
-            FXMLLoader loader = fxmlLoad(resource);
-            if (table.getSelectionModel().getSelectedItem() instanceof Product) {
-                ((ModifyProductController) loader.getController()).passSelectedProduct(table.getSelectionModel().getSelectedIndex(),
-                        (Product) table.getSelectionModel().getSelectedItem());
+            String resource;
+            if (((Button) modifyEvent.getSource()).getId().contains("Product")) {
+                resource = "/view/ModifyProductView.fxml";
             } else {
-                ((ModifyPartController) loader.getController()).passSelectedPart(table.getSelectionModel().getSelectedIndex(),
-                        table.getSelectionModel().getSelectedItem());
+                resource = "/view/ModifyPartView.fxml";
             }
-            setStage(event, loader);
+            loadFXML(modifyEvent, resource);
         } catch (Exception exception) {
             displayErrorMessage(exception);
         }
     }
-    public void OnDeletePart() { deleteItem(partTable); }
-    public void OnDeleteProduct() { deleteItem(productTable); }
-    public <T extends Part> void deleteItem(TableView<T> table) {
+    /** Handles deletion of either Part or Product
+     * @param delete the ActionEvent containing UID of click, allows method to determine table to check for a selection
+     */
+    public <T extends Part> void OnDeleteItem(ActionEvent delete) {
         try {
-            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmation.setTitle("Delete Item");
-            confirmation.setContentText("Are you sure you want to delete this item?\n" + table.getSelectionModel().getSelectedItem().getName());
-            Optional<ButtonType> result = confirmation.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                if (table.getSelectionModel().getSelectedItem() instanceof Product){
-                    Inventory.deleteProduct((Product) table.getSelectionModel().getSelectedItem());
+            if (displayConfirmation(productTable).get() == ButtonType.OK) {
+                if (((Button) delete.getSource()).getId().contains("Product")) {
+                    Inventory.deleteProduct(productTable.getSelectionModel().getSelectedItem());
                 } else {
-                    Inventory.deletePart(table.getSelectionModel().getSelectedItem());
+                    Inventory.deletePart(partTable.getSelectionModel().getSelectedItem());
                 }
             }
-        } catch (Exception exception) {
+        } catch(Exception exception) {
             displayErrorMessage(exception);
         }
     }
     public void OnExitButtonClicked() { Main.quit(); }
 
-    // Helper Functions
+    /** Generic Error Message which reports the exception to the user
+     * @param exception Any exception type
+     */
     public void displayErrorMessage(Exception exception) {
         Alert errorMessage = new Alert(Alert.AlertType.ERROR);
         errorMessage.setTitle("Error Message");
@@ -121,22 +130,41 @@ public class MainViewController implements Initializable {
         errorMessage.show();
     }
 
-    /** Loads an FXML file given a provided resource.
-     *
-     * @param resource String
-     * @return fxmlLoader FXMLLoader
-     * @throws IOException
+    /** Generic Confirmation Message which asks the user to confirm a remove action
+     * @param table the TableView associated with the Delete or Remove Associated Part button.
      */
-    public FXMLLoader fxmlLoad(String resource) throws IOException {
+    public <T extends Part> Optional<ButtonType> displayConfirmation(TableView<T> table) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Delete Item");
+        confirmation.setContentText("Are you sure you want to delete this item?\n" +
+                table.getSelectionModel().getSelectedItem().getName());
+        return confirmation.showAndWait();
+    }
+
+    /** Loads an FXML file given a provided resource.
+     *  When loading ModifyPartView or ModifyProductView, the selected item
+     *  has to be passed from the instance of MainViewController to an instance of
+     *  either Modify View.
+     *
+     * @param resource String URL of the FXML filepath
+     * @param event  ID of the Button click which initiated a loadFXML method call.
+     * @throws IOException if FXML is not found.
+     */
+    public void loadFXML(ActionEvent event, String resource) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource(resource));
         fxmlLoader.load();
-        return fxmlLoader;
-    }
-
-    public void setStage(ActionEvent load, FXMLLoader loader) {
-        Stage stage = (Stage) ((Button) load.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(loader.getRoot()));
+        if (resource.contains("ModifyProduct")) {
+            ((ModifyProductController) fxmlLoader.getController()).passSelectedProduct(
+                    productTable.getSelectionModel().getSelectedIndex(),
+                    productTable.getSelectionModel().getSelectedItem());
+        } else if(resource.contains("ModifyPart")) {
+            ((ModifyPartController) fxmlLoader.getController()).passSelectedPart(
+                    partTable.getSelectionModel().getSelectedIndex(),
+                    partTable.getSelectionModel().getSelectedItem());
+        }
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(fxmlLoader.getRoot()));
         stage.show();
     }
 }

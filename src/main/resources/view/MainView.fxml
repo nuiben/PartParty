@@ -25,8 +25,8 @@
                      <Font name="System Bold" size="12.0" />
                   </font></Label>
               <Button layoutX="225.0" layoutY="208.0" onAction="#OnAddPart" text="Add" />
-               <Button layoutX="268.0" layoutY="208.0" onAction="#OnModifyPart" text="Modify" />
-               <Button layoutX="330.0" layoutY="208.0" onAction="#OnDeletePart" text="Delete" />
+               <Button fx:id="ModifyPart" layoutX="268.0" layoutY="208.0" onAction="#OnModifyItem" text="Modify"/>
+               <Button fx:id="DeletePart" layoutX="330.0" layoutY="208.0" onAction="#OnDeleteItem" text="Delete" />
                <TableView fx:id="partTable" layoutX="14.0" layoutY="38.0" prefHeight="170.0" prefWidth="375.0">
                  <columns>
                    <TableColumn fx:id="partID" prefWidth="67.0" text="Part ID" />
@@ -43,8 +43,8 @@
                      <Font name="System Bold" size="12.0" />
                   </font></Label>
                <Button layoutX="225.0" layoutY="208.0" onAction="#OnAddProduct" text="Add" />
-               <Button layoutX="268.0" layoutY="208.0" onAction="#OnModifyProduct" text="Modify" />
-               <Button layoutX="330.0" layoutY="208.0" onAction="#OnDeleteProduct" text="Delete" />
+               <Button fx:id="ModifyProduct" layoutX="268.0" layoutY="208.0" onAction="#OnModifyItem" text="Modify" />
+               <Button fx:id="DeleteProduct" layoutX="330.0" layoutY="208.0" onAction="#OnDeleteItem" text="Delete" />
                <TableView fx:id="productTable" layoutX="14.0" layoutY="38.0" prefHeight="170.0" prefWidth="375.0">
                   <columns>
                      <TableColumn fx:id="productID" prefWidth="68.0" text="Product ID" />

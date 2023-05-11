@@ -1,5 +1,9 @@
 package ben.partparty.main;
 
+/*
+  @author Benjamin Porter
+ */
+
 import ben.partparty.model.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,7 +17,7 @@ import java.io.IOException;
 public class Main extends Application {
 
     /** Program Loads in Sample Inputs for InHouse, OutSourced, and Product then launches application.
-     * @param args
+     * @param args argument provided on launch.
      * */
     public static void main(String[] args) {
         String[] words = {"Widget", "Gadget", "Transformer", "Conduit", "Assembly", "Pulley", "Gizmo", "Apparatus",
@@ -33,17 +37,19 @@ public class Main extends Application {
 
         for (int i = 0; i < 3; i++ ) {
             String InHouseName = words[(int)(Math.random() * words.length)];
-            String OutsourcedName = words[(int)(Math.random() * words.length)];
+
             String ProductName = techBuzzwords[(int)(Math.random() * techBuzzwords.length)] + " " + words[(int)(Math.random() * words.length)];
             Inventory.addPart(new InHouse(i+1, InHouseName, (int)(Math.random()*10) + 0.99, 10, 0, 50, 101044));
-            Inventory.addPart(new Outsourced(i+4, OutsourcedName, (int)(Math.random()*10) + 0.99, 150, 50, 200, "OmegaMart & Subsidiaries"));
             Inventory.addProduct(new Product(i+100, ProductName, (int)(Math.random()*100) + 0.99, 8, 0, 20));
+        }
+        for (int i = 4; i < 7; i++ ) {
+            String OutsourcedName = words[(int)(Math.random() * words.length)];
+            Inventory.addPart(new Outsourced(i, OutsourcedName, (int) (Math.random() * 10) + 0.99, 150, 50, 200, "OmegaMart & Subsidiaries"));
         }
         launch(args);
     }
 
     /** Loads in MainView.fxml file and displays on the screen
-     * @params stage
      * */
     @Override
     public void start(Stage stage) throws IOException {
