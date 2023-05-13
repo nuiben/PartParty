@@ -102,11 +102,13 @@ public class AddProductController extends AddPartController {
     public void OnSaveProduct(ActionEvent save) throws IOException{
         if (product == null) {
             try {
-                testFields();
-                product = newProduct(getHighestProductID());
-                product.getAllAssociatedParts().addAll(temporaryAssociatedParts);
-                Inventory.addProduct(product);
-                loadFXML(save, "/view/MainView.fxml");
+                if (displayConfirmation("save").get() == ButtonType.OK) {
+                    testFields();
+                    product = newProduct(getHighestProductID());
+                    product.getAllAssociatedParts().addAll(temporaryAssociatedParts);
+                    Inventory.addProduct(product);
+                    loadFXML(save, "/view/MainView.fxml");
+                }
             } catch (Exception exception) {
                 displayErrorMessage(exception);
             }

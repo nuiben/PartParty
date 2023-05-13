@@ -6,6 +6,7 @@ import ben.partparty.model.Outsourced;
 import ben.partparty.model.Part;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 
 import java.net.URL;
@@ -44,7 +45,7 @@ public class ModifyPartController extends AddPartController {
             optionOS.fire();
             optionTextBox.setText(String.valueOf(((Outsourced) selection).getCompanyName()));
         } else {
-            optionTextBox.setText(String.valueOf(((InHouse) selection).getMachineID()));
+            optionTextBox.setText(String.valueOf(((InHouse) selection).getMachineId()));
         }
     }
 
@@ -54,8 +55,10 @@ public class ModifyPartController extends AddPartController {
      */
     public void OnModifyPartSave(ActionEvent save) {
         try {
-            Inventory.updatePart(selectedIndex, saveItem(selectedPart));
-            loadFXML(save, "/view/MainView.fxml");
+            if (displayConfirmation("save").get() == ButtonType.OK) {
+                Inventory.updatePart(selectedIndex, saveItem(selectedPart));
+                loadFXML(save, "/view/MainView.fxml");
+            }
         } catch (Exception exception) {
             displayErrorMessage(exception);
         }

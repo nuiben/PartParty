@@ -5,6 +5,7 @@ import ben.partparty.model.Part;
 import ben.partparty.model.Product;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 
 /**
@@ -39,10 +40,12 @@ public class ModifyProductController extends AddProductController {
     public void OnModifyProductSave(ActionEvent save) {
             try {
                 testFields();
-                Inventory.updateProduct(selectedIndex, saveProduct(product));
-                product.getAllAssociatedParts().setAll(temporaryAssociatedParts);
-                System.out.println(product.getAllAssociatedParts().toString());
-                loadFXML(save, "/view/MainView.fxml");
+                if (displayConfirmation("save").get() == ButtonType.OK) {
+                    Inventory.updateProduct(selectedIndex, saveProduct(product));
+                    product.getAllAssociatedParts().setAll(temporaryAssociatedParts);
+                    System.out.println(product.getAllAssociatedParts().toString());
+                    loadFXML(save, "/view/MainView.fxml");
+                }
             }
             catch (Exception exception) {
                 displayErrorMessage(exception);

@@ -1,7 +1,7 @@
 package ben.partparty.model;
 
 /**
- * InHouse Class
+ * InHouse Class - Child of Part Class
  */
 public class InHouse extends Part {
     private int machineId;
@@ -24,7 +24,7 @@ public class InHouse extends Part {
      * Get method for the machineID variable.
      * @param  machineId sets machineID with integer provided.
      */
-    public void setMachineID(int machineId) {
+    public void setMachineId(int machineId) {
         this.machineId = machineId;
     }
 
@@ -32,7 +32,7 @@ public class InHouse extends Part {
      * Get method for the machineID variable.
      * @return machineID Integer value of the machine that created product.
      */
-    public int getMachineID() {
+    public int getMachineId() {
         return machineId;
     }
 }

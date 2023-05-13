@@ -3,6 +3,7 @@ package ben.partparty.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
 /**
  * Inventory Class to handle Part and Product Objects.
  */
@@ -49,13 +50,14 @@ public class Inventory {
      * @param partName the String Value of the Part's Name
      * @return Part Object
      */
-    public static Part lookupPart(String partName) {
-        for (Part targetPart : getAllParts()) {
-            if (targetPart.getName().equals(partName)) {
-                return targetPart;
+    public static ObservableList<Part> lookupPart(String partName) {
+        ObservableList<Part> returnParts = FXCollections.observableArrayList();
+        for (Part part : allParts) {
+            if (part.getName().toLowerCase().contains(partName.toLowerCase())) {
+                returnParts.add(part);
             }
         }
-        return null;
+        return returnParts;
     }
 
     /**
@@ -77,13 +79,14 @@ public class Inventory {
      * @param productName the value being searched.
      * @return Part Object
      */
-    public static Product lookupProduct(String productName) {
-        for (Product product : getAllProducts()) {
-            if (product.getName().equals(productName)) {
-                return product;
+    public static ObservableList<Product> lookupProduct(String productName) {
+        ObservableList<Product> returnProducts = FXCollections.observableArrayList();
+        for (Product product : allProducts) {
+            if (product.getName().toLowerCase().contains(productName.toLowerCase())) {
+                returnProducts.add(product);
             }
         }
-        return null;
+        return returnProducts;
     }
 
 
