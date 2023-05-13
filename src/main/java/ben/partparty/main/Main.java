@@ -18,6 +18,10 @@ public class Main extends Application {
 
     /** Program Loads in Sample Inputs for InHouse, OutSourced, and Product then launches application.
      * @param args argument provided on launch.
+     *
+     * @FUTURE_ENHANCEMENT The generated inputs are fun, but it would greatly improve the user experience
+     * if there were a function to generate even more inputs, or to randomize the fields when adding or modifying
+     * an item.
      * */
     public static void main(String[] args) {
         String[] words = {"Widget", "Gadget", "Transformer", "Conduit", "Assembly", "Pulley", "Gizmo", "Apparatus",
@@ -37,7 +41,6 @@ public class Main extends Application {
 
         for (int i = 0; i < 3; i++ ) {
             String InHouseName = words[(int)(Math.random() * words.length)];
-
             String ProductName = techBuzzwords[(int)(Math.random() * techBuzzwords.length)] + " " + words[(int)(Math.random() * words.length)];
             Inventory.addPart(new InHouse(i+1, InHouseName, (int)(Math.random()*10) + 0.99, 10, 0, 50, 101044));
             Inventory.addProduct(new Product(i+100, ProductName, (int)(Math.random()*100) + 0.99, 8, 0, 20));

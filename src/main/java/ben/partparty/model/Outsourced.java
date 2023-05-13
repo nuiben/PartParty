@@ -16,18 +16,19 @@ public class Outsourced extends Part{
         super(id, name, price, stock, min, max);
         this.companyName = companyName;
     }
-    /**
-     * Get method for the companyName variable.
-     * @return companyName String value of company that made part.
-     */
-    public String getCompanyName() {
-        return companyName;
-    }
+
     /**
      * Get method for the machineID variable.
      * @param  companyName sets machineID with integer provided.
      */
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+    /**
+     * Get method for the companyName variable.
+     * @return companyName String value of company that made part.
+     */
+    public String getCompanyName() {
+        return companyName;
     }
 }

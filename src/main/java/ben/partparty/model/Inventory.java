@@ -2,7 +2,6 @@ package ben.partparty.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.io.IOException;
 
 /**
  * Inventory Class to handle Part and Product Objects.
@@ -14,14 +13,16 @@ public class Inventory {
 
     /**
      * Insert a Part object into observable list of type Part.
-     * @param part Part type object being added.
+     *
+     * @param newPart Part type object being added.
      */
-    public static void addPart(Part part) {
-        allParts.add(part);
+    public static void addPart(Part newPart) {
+        allParts.add(newPart);
     }
 
     /**
      * Insert a Product object into observable list of type Product.
+     *
      * @param newProduct the Product object being added to the ObservableList.
      */
 
@@ -30,57 +31,10 @@ public class Inventory {
     }
 
     /**
-     * Update a Part object inside the observable list of type Part.
-     * @param part Part type object being added.
-     */
-    public static void updatePart(int index, Part part) {
-        allParts.set(index, part);
-    }
-
-    /**
-     * Update a Product object inside the observable list of type Part.
-     * @param product Product type object being added.
-     */
-    public static void updateProduct(int index, Product product) {
-        allProducts.set(index, product);
-    }
-    /**
-     * Delete a Part object inside the observable list of type Part.
-     * @param part Product type object being added.
-     * @return boolean value if delete was successful
-     */
-    public static boolean deletePart(Part part) {
-        return allParts.remove(part);
-    }
-    /**
-     * Delete a Product object inside the observable list of type Part.
-     * @param product Product type object being added.
-     * @return boolean  value if delete was successful
-     */
-    public static boolean deleteProduct(Product product) {
-        return allProducts.remove(product);
-    }
-    /**
-     * Retrieves the ObservableList of Parts
-     * @return ObservableList<Part>
-     */
-    public static ObservableList<Part> getAllParts() {
-        return allParts;
-    }
-    /**
-     * Retrieves the ObservableList of Products
-     * @return boolean value if delete was successful
-     */
-    public static ObservableList<Product> getAllProducts(){
-        return allProducts;
-    }
-
-    /**
-     * Currently being handled by EventListener and Lambda function in MainViewController
-     * @deprecated lookupPart
+     * Returns a parsed string passed by the TextField.
      * @param partId the integer value of the Part's Id
+     * @return Part Object
      */
-    @Deprecated
     public static Part lookupPart(int partId) {
         for (Part targetPart : getAllParts()) {
             if (targetPart.getId() == partId) {
@@ -91,11 +45,10 @@ public class Inventory {
     }
 
     /**
-     * Currently being handled by lambda function in MainViewController
-     * @deprecated
+     * Returns a match to the string passed by the TextField or Null.
      * @param partName the String Value of the Part's Name
+     * @return Part Object
      */
-    @Deprecated
     public static Part lookupPart(String partName) {
         for (Part targetPart : getAllParts()) {
             if (targetPart.getName().equals(partName)) {
@@ -106,33 +59,85 @@ public class Inventory {
     }
 
     /**
-     * Currently being handled by lambda function in MainViewController
-     * @deprecated
+     * Returns a parsed string passed by the TextField.
      * @param productId the integer value of the Part's Id
+     * @return Part Object
      */
-    @Deprecated
-    public static Part lookupProduct(int productId) {
-        for (Part targetPart : getAllParts()) {
-            if (targetPart.getId() == productId) {
-                return targetPart;
+    public static Product lookupProduct(int productId) {
+        for (Product product : getAllProducts()) {
+            if (product.getId() == productId) {
+                return product;
             }
         }
         return null;
     }
 
     /**
-     * Currently being handled by lambda function in MainViewController
-     * @deprecated
+     * Returns a match to the string passed by the TextField or Null.
      * @param productName the value being searched.
+     * @return Part Object
      */
-    @Deprecated
-    public static Part lookupProduct(String productName) {
-        for (Part targetProduct : getAllParts()) {
-            if (targetProduct.getName().equals(productName)) {
-                return targetProduct;
+    public static Product lookupProduct(String productName) {
+        for (Product product : getAllProducts()) {
+            if (product.getName().equals(productName)) {
+                return product;
             }
         }
         return null;
+    }
+
+
+    /**
+     * Update a Part object inside the observable list of type Part.
+     * @param selectedPart Part type object being added.
+     */
+    public static void updatePart(int index, Part selectedPart) {
+        allParts.set(index, selectedPart);
+    }
+
+    /**
+     * Update a Product object inside the observable list of type Part.
+     * @param newProduct Product type object being added.
+     */
+    public static void updateProduct(int index, Product newProduct) {
+        allProducts.set(index, newProduct);
+    }
+
+    /**
+     * Delete a Part object inside the observable list of type Part.
+     * @param selectedPart Product type object being added.
+     * @return boolean value if delete was successful
+     */
+    public static boolean deletePart(Part selectedPart) {
+        return allParts.remove(selectedPart);
+    }
+
+    /**
+     * Delete a Product object inside the observable list of type Part.
+     *
+     * @param selectedPart Product type object being added.
+     * @return boolean  value if delete was successful
+     */
+    public static boolean deleteProduct(Product selectedPart) {
+        return allProducts.remove(selectedPart);
+    }
+
+    /**
+     * Retrieves the ObservableList of Parts
+     *
+     * @return ObservableList<Part>
+     */
+    public static ObservableList<Part> getAllParts() {
+        return allParts;
+    }
+
+    /**
+     * Retrieves the ObservableList of Products
+     *
+     * @return ObservableList<Product>
+     */
+    public static ObservableList<Product> getAllProducts() {
+        return allProducts;
     }
 }
 

@@ -33,7 +33,7 @@
       </AnchorPane>
       <AnchorPane layoutX="400.0" layoutY="30.0" prefHeight="530.0" prefWidth="492.0">
          <children>
-            <TextField fx:id="partSearch" layoutX="320.0" layoutY="14.0" promptText="Search by Part ID or Name" />
+            <TextField fx:id="partSearch" layoutX="320.0" layoutY="14.0" onKeyPressed="#Enter" promptText="Search by Part ID or Name" />
             <Button layoutX="323.0" layoutY="491.0" mnemonicParsing="false" onAction="#OnRemoveAssociatedPart" text="Remove Associated Part" />
             <TableView fx:id="partTable" layoutX="32.0" layoutY="56.0" prefHeight="185.0" prefWidth="436.0">
                <columns>

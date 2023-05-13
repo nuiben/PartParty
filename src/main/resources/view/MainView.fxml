@@ -25,7 +25,7 @@
                      <Font name="System Bold" size="12.0" />
                   </font></Label>
               <Button layoutX="225.0" layoutY="208.0" onAction="#OnAddPart" text="Add" />
-               <Button fx:id="ModifyPart" layoutX="268.0" layoutY="208.0" onAction="#OnModifyItem" text="Modify"/>
+               <Button fx:id="ModifyPart" layoutX="268.0" layoutY="208.0" onAction="#OnModifyItem" text="Modify" />
                <Button fx:id="DeletePart" layoutX="330.0" layoutY="208.0" onAction="#OnDeleteItem" text="Delete" />
                <TableView fx:id="partTable" layoutX="14.0" layoutY="38.0" prefHeight="170.0" prefWidth="375.0">
                  <columns>
@@ -35,7 +35,7 @@
                      <TableColumn fx:id="partPrice" prefWidth="90.0" text="Price/Cost per Unit" />
                  </columns>
                </TableView>
-               <TextField fx:id="partSearch" layoutX="240.0" layoutY="13.0" promptText="Search by Part ID or Name" />
+               <TextField fx:id="partSearch" layoutX="240.0" layoutY="13.0" onKeyPressed="#Enter" promptText="Search by Part ID or Name" />
          </AnchorPane>
          <AnchorPane layoutX="430.0" layoutY="27.0" prefHeight="246.0" prefWidth="394.0" style="-fx-border-color: black; -fx-border-radius: 10px;">
                <Label layoutX="25.0" layoutY="15.0" prefHeight="25.0" prefWidth="51.0" text="Products">
@@ -53,7 +53,7 @@
                      <TableColumn fx:id="productPrice" prefWidth="72.0" text="Price/Cost per Unit" />
                   </columns>
                </TableView>
-               <TextField fx:id="productSearch" layoutX="240.0" layoutY="13.0" promptText="Search by Product ID or Name" />
+               <TextField fx:id="productSearch" layoutX="240.0" layoutY="13.0" onKeyPressed="#Enter" promptText="Search by Product ID or Name" />
          </AnchorPane>
          <Button layoutX="765.0" layoutY="315.0" onAction="#OnExitButtonClicked" text="Exit" />
          </AnchorPane>

@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * ModifyPartController Class
+ * Tertiary Controller - Inherits only from AddPartController.
  */
 public class ModifyPartController extends AddPartController {
     public int selectedIndex;
@@ -31,6 +31,10 @@ public class ModifyPartController extends AddPartController {
      * Called from MainViewController, updates field values to match Part variables and type.
      * @param index integer value of the selected Part.
      * @param selection Part object selected to modify.
+     *
+     * @RUNTIME_ERROR Modified objects were not registering as changed between Outsourced and InHouse.
+     * After type casting and checking types, it was revealed that the objects were changing, but the
+     * Radio buttons were defaulting to InHouse even for Outsourced parts.
      */
     public void passSelectedPart(int index, Part selection) {
         selectedIndex = index;
