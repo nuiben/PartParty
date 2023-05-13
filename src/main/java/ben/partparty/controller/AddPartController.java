@@ -145,7 +145,7 @@ public class AddPartController extends MainViewController {
                 ((Outsourced) item).setCompanyName(optionTextBox.getText());
             }
             else if (optionOS != null) {
-                ((InHouse) item).setMachineID(Integer.parseInt(optionTextBox.getText()));
+                ((InHouse) item).setMachineId(Integer.parseInt(optionTextBox.getText()));
             }
         }
         catch(ClassCastException exception) {

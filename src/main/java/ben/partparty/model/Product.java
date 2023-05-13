@@ -4,16 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * Instantiates Abstract Part Super Class
+ * Product Class which holds input parameters and a list of Part Objects associated
+ * with the Product.
  * @author Ben Porter
  */
 public class Product{
     private int id;
     private String name;
     private double price;
-    private int stock;
-    private int min;
-    private int max;
+    private int stock; // must be non-negative and between min and max
+    private int min;  // must be non-negative
+    private int max; // must be non-negative
     private ObservableList<Part> associatedParts = FXCollections.observableArrayList();
 
     /** Default Constructor for Product

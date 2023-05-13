@@ -13,7 +13,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 
-/** This is the Main Class */
+/** This is the Main Class for the Party Party Program
+ *
+ *
+ *  Relevant Filepaths for this Project:
+ *
+ *  PartParty\src\main\java\ben\partparty\main
+ *  PartParty\src\main\java\ben\partparty\model
+ *  PartParty\src\main\resources\view
+ *  PartParty\src\main\java\ben\partparty\controller
+ *  PartParty\Javadoc
+ * */
 public class Main extends Application {
 
     /** Program Loads in Sample Inputs for InHouse, OutSourced, and Product then launches application.
@@ -48,6 +58,7 @@ public class Main extends Application {
         for (int i = 4; i < 7; i++ ) {
             String OutsourcedName = words[(int)(Math.random() * words.length)];
             Inventory.addPart(new Outsourced(i, OutsourcedName, (int) (Math.random() * 10) + 0.99, 150, 50, 200, "OmegaMart & Subsidiaries"));
+
         }
         launch(args);
     }

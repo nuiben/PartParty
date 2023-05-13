@@ -1,5 +1,9 @@
 package ben.partparty.model;
 
+/**
+ * Outsourced Class - Child of Part Class
+ */
+
 public class Outsourced extends Part{
     private String companyName;
     /**

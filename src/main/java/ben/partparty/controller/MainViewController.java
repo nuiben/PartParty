@@ -2,6 +2,8 @@ package ben.partparty.controller;
 
 import ben.partparty.main.Main;
 import ben.partparty.model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -51,7 +53,6 @@ public class MainViewController implements Initializable {
 
     /** Loads a TableView, binds contents to a SortedList which displays
      *  Search Results input to Table's search bar.
-     *
      * */
     public void loadPartTable() {
         this.partTable.setItems(Inventory.getAllParts());
@@ -140,10 +141,16 @@ public class MainViewController implements Initializable {
      *  The inclusion of generics significantly reduced reused codes which were identical for both parts and products.
      *
      * @throws NullPointerException if no selection is indicated
-         *  @RUNTIME_ERROR Before the button ID check placed in the line under the displayConfirmation, the method calls to this function
-         *  were very verbose and required their own FXML loader, oftentimes this would create NullPointer and IOExceptions
-         *  that required additional code to check for. The simple getId() function cut down on 10-15 lines of code and resolved
-         *  the core issue.
+     *  @RUNTIME_ERROR Before the button ID check placed in the line under the displayConfirmation, the method calls to this function
+     *  were very verbose and required their own FXML loader, oftentimes this would create NullPointer and IOExceptions
+     *  that required additional code to check for. The simple getId() function cut down on 10-15 lines of code and resolved
+     *  the core issue.
+     * @RUNTIME_ERROR  if a Product still has associated parts when selected for deletion.
+     * @FUTURE_ENHANCEMENT A check prior to deletion which prevents the user from deleting a part without first
+     * removing it as an associated part from a product could be added if parts were updated to include a list of
+     * "Associated Products". An implementation of this without updating part would create a runtime complexity of
+     * O(N^2) as a part would have to check all Products for all Asssociated Parts lists to confirm if it exists
+     * before proceeding to delete.
      */
     public void OnDeleteItem(ActionEvent delete) throws NullPointerException {
         try {
@@ -151,6 +158,8 @@ public class MainViewController implements Initializable {
                 Product doomedProduct = productTable.getSelectionModel().getSelectedItem();
                 if (doomedProduct == null){
                     throw new NullPointerException("No selection indicated");
+                } else if (!doomedProduct.getAllAssociatedParts().isEmpty()) {
+                    throw new RuntimeException("This Product still has Associated Parts");
                 }
                 if (displayConfirmation(doomedProduct.getName()).get() == ButtonType.OK) {
                     if (Inventory.deleteProduct(doomedProduct)) {
@@ -272,13 +281,13 @@ public class MainViewController implements Initializable {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 String source = ((TextField) keyEvent.getSource()).getId();
                 String query;
-                Product searchProduct;
+                ObservableList<Product> searchProduct = FXCollections.observableArrayList();
                 if (source.contains("product")) {
                     query = productSearch.getText();
                 } else {
                     query = partSearch.getText();
                 }
-                Part searchPart;
+                ObservableList<Part> searchPart = FXCollections.observableArrayList();
                 int queryParsed;
                 if (query.isEmpty()) {
                     throw new NumberFormatException("Search Field Empty: Please Type an ID or Name");
@@ -286,18 +295,18 @@ public class MainViewController implements Initializable {
                 try {
                     queryParsed = Integer.parseInt(query);
                     if (source.contains("product")) {
-                        searchProduct = Inventory.lookupProduct(queryParsed);
-                        if (searchProduct == null) {
+                        searchProduct.add(Inventory.lookupProduct(queryParsed));
+                        if (searchProduct.isEmpty()) {
                             throw new NullPointerException("Part Not Found");
                         } else {
-                            productTable.getSelectionModel().select(searchProduct);
+                            productTable.getSelectionModel().select(searchProduct.get(0));
                         }
                     } else {
-                        searchPart = Inventory.lookupPart(queryParsed);
-                        if (searchPart == null) {
+                        searchPart.add(Inventory.lookupPart(queryParsed));
+                        if (searchPart.isEmpty()) {
                             throw new NullPointerException("Part Not Found");
                         } else {
-                            partTable.getSelectionModel().select(searchPart);
+                            partTable.getSelectionModel().select(searchPart.get(0));
                         }
                     }
 
@@ -305,16 +314,14 @@ public class MainViewController implements Initializable {
                 catch (NumberFormatException exception) {
                     if (source.contains("product")) {
                         searchProduct = Inventory.lookupProduct(query);
-                        if (searchProduct == null && productTable.getItems().isEmpty()) {
+                        if (searchProduct.isEmpty() && productTable.getItems().isEmpty()) {
                             throw new NullPointerException("Part Not Found");
                         } else {
                             productTable.getSelectionModel().select(productTable.getItems().get(0));
                         }
                     } else {
-                        System.out.println(Inventory.lookupPart(query));
                         searchPart = Inventory.lookupPart(query);
-                        System.out.println(partTable.getItems().toString());
-                        if (searchPart == null && partTable.getItems().isEmpty()) {
+                        if (searchPart.isEmpty() && partTable.getItems().isEmpty()) {
                             throw new NullPointerException("Part Not Found");
                         } else {
                             partTable.getSelectionModel().select(partTable.getItems().get(0));
