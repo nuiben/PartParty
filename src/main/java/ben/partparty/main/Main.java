@@ -29,7 +29,7 @@ public class Main extends Application {
     /** Program Loads in Sample Inputs for InHouse, OutSourced, and Product then launches application.
      * @param args argument provided on launch.
      *
-     * @FUTURE_ENHANCEMENT The generated inputs are fun, but it would greatly improve the user experience
+     * FUTURE_ENHANCEMENT The generated inputs are fun, but it would greatly improve the user experience
      * if there were a function to generate even more inputs, or to randomize the fields when adding or modifying
      * an item.
      * */

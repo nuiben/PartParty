@@ -27,6 +27,14 @@ import java.util.ResourceBundle;
 /** Primary Controller - Initiates Child Controllers to handle each FXML file in the view directory.
  *  MainViewController -> AddPartController -> AddProductController -> ModifyProductController
  *                                ^-> ModifyPartController
+ * FUTURE_ENHANCEMENT A check prior to deletion which prevents the user from deleting a part without first
+ * removing it as an associated part from a product could be added if parts were updated to include a list of
+ * "Associated Products". An implementation of this without updating part would create a runtime complexity of
+ * O(N^2) as a part would have to check all Products for all Asssociated Parts lists to confirm if it exists
+ * before proceeding to delete.
+ * FUTURE_ENHANCEMENT Relying on the FXML loader constrained normal object-oriented principals,
+ * exploring alternative options for displaying a GUI would greatly reduce redundant calls and methods,
+ * potentially allowing for all Controllers to be consolidated instead of using inheritance.
  *  */
 public class MainViewController implements Initializable {
     @FXML
@@ -97,7 +105,7 @@ public class MainViewController implements Initializable {
     /** Loads AddPartView when addPart button is clicked.
      * @param addPart ActionEvent containing UID of a click on Add button underneath Part Table
      * @throws IOException if the FXML could not be found
-     * @RUNTIME_ERROR Throws an error when resource file has not been installed.
+     * RUNTIME_ERROR Throws an error when resource file has not been installed.
      * */
     public void OnAddPart(ActionEvent addPart) throws IOException {
         loadFXML(addPart, "/view/AddPartView.fxml");
@@ -105,7 +113,6 @@ public class MainViewController implements Initializable {
     /** Loads AddProductView when addPart button is clicked.
      * @param addProduct ActionEvent containing UID of a click on Add button underneath Product Table
      * @throws IOException if the FXML could not be found
-     * @RUNTIME_ERROR Throws an error when resource file has not been installed.
      *
      * */
     public void OnAddProduct(ActionEvent addProduct) throws IOException {
@@ -113,9 +120,8 @@ public class MainViewController implements Initializable {
     }
     /** Loads ModifyProductView or ModifyPartView depending on which is clicked.
      * @param modifyEvent ActionEvent containing UID of click, allows method to determine which view to open
-     * @throws NullPointerException if no selection is indicated.
-     *      @RUNTIME_ERROR If an item has not been clicked inside the matching table to the "modify" button
-     *      clicked, the system will not continue to loading the corresponding FXML file.
+     * @throws NullPointerException RUNTIME_ERROR If an item has not been clicked inside the matching table to the "modify" button
+     * clicked, the system will not continue to loading the corresponding FXML file.
      * */
     public void OnModifyItem(ActionEvent modifyEvent) throws NullPointerException{
         try {
@@ -140,17 +146,11 @@ public class MainViewController implements Initializable {
      * @param delete the ActionEvent containing UID of click, allows method to determine table to check for a selection
      *  The inclusion of generics significantly reduced reused codes which were identical for both parts and products.
      *
-     * @throws NullPointerException if no selection is indicated
-     *  @RUNTIME_ERROR Before the button ID check placed in the line under the displayConfirmation, the method calls to this function
+     * @throws NullPointerException RUNTIME_ERROR Before the button ID check placed in the line under the displayConfirmation, the method calls to this function
      *  were very verbose and required their own FXML loader, oftentimes this would create NullPointer and IOExceptions
      *  that required additional code to check for. The simple getId() function cut down on 10-15 lines of code and resolved
      *  the core issue.
-     * @RUNTIME_ERROR  if a Product still has associated parts when selected for deletion.
-     * @FUTURE_ENHANCEMENT A check prior to deletion which prevents the user from deleting a part without first
-     * removing it as an associated part from a product could be added if parts were updated to include a list of
-     * "Associated Products". An implementation of this without updating part would create a runtime complexity of
-     * O(N^2) as a part would have to check all Products for all Asssociated Parts lists to confirm if it exists
-     * before proceeding to delete.
+     * @throws RuntimeException RUNTIME_ERROR If a Product still has associated parts when selected for deletion.
      */
     public void OnDeleteItem(ActionEvent delete) throws NullPointerException {
         try {
@@ -234,14 +234,10 @@ public class MainViewController implements Initializable {
      * @param resource String URL of the FXML filepath
      * @param event  ID of the Button click which initiated a loadFXML method call.
      * @throws IOException if FXML is not found.
-     *      @RUNTIME_ERROR A significant logical bug was created by the Modify Controllers which required
+     *      RUNTIME_ERROR A significant logical bug was created by the Modify Controllers which required
      *      the use of a FXMLLoader to receive the selection and index from the MainViewController.
      *      The inclusion of the cast type allowed for the Modify event handlers to use this method
      *      without instantiating their own loaders a minor behavior change.
-     *
-     * @FUTURE_ENHANCEMENT Relying on the FXML loader constrained normal object-oriented principals,
-     * exploring alternative options for displaying a GUI would greatly reduce redundant calls and methods,
-     * potentially allowing for all Controllers to be consolidated instead of using inheritance.
      */
     public void loadFXML(ActionEvent event, String resource) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -272,8 +268,14 @@ public class MainViewController implements Initializable {
      *
      * @param keyEvent source object identifying which FXML object is being used.
      * @throws NullPointerException If a search result returns "NULL"
-     *      @RUNTIME_ERROR System presents an error message if there is not a matching
-     *      search result to the text inside the TextField Object.
+     * RUNTIME_ERROR System presents an error message if there is not a matching
+     *                search result to the text inside the TextField Object.
+     * RUNTIME_ERROR When search results were empty, the system was still able to select
+     *                a null item. This led to no error being returned
+     * FUTURE_ENHANCEMENT Currently this search relies on several branching if-statements.
+     *                     Implementing a data structure such as a stack could handle
+     *                     many of the checks which are performed at runtime and create
+     *                     a more legible function.
      * */
     @FXML
     public void Enter(KeyEvent keyEvent) throws NullPointerException{
@@ -296,14 +298,15 @@ public class MainViewController implements Initializable {
                     queryParsed = Integer.parseInt(query);
                     if (source.contains("product")) {
                         searchProduct.add(Inventory.lookupProduct(queryParsed));
-                        if (searchProduct.isEmpty()) {
-                            throw new NullPointerException("Part Not Found");
+                        if (searchProduct.get(0) == null) {
+                            throw new NullPointerException("Product Not Found");
                         } else {
+                            System.out.println(searchProduct.get(0));
                             productTable.getSelectionModel().select(searchProduct.get(0));
                         }
                     } else {
                         searchPart.add(Inventory.lookupPart(queryParsed));
-                        if (searchPart.isEmpty()) {
+                        if (searchPart.get(0) == null) {
                             throw new NullPointerException("Part Not Found");
                         } else {
                             partTable.getSelectionModel().select(searchPart.get(0));
@@ -313,15 +316,15 @@ public class MainViewController implements Initializable {
                 }
                 catch (NumberFormatException exception) {
                     if (source.contains("product")) {
-                        searchProduct = Inventory.lookupProduct(query);
-                        if (searchProduct.isEmpty() && productTable.getItems().isEmpty()) {
-                            throw new NullPointerException("Part Not Found");
+                        if (productTable.getItems().isEmpty()) {
+                            System.out.println("C");
+                            throw new NullPointerException("Product Not Found");
                         } else {
                             productTable.getSelectionModel().select(productTable.getItems().get(0));
                         }
                     } else {
-                        searchPart = Inventory.lookupPart(query);
-                        if (searchPart.isEmpty() && partTable.getItems().isEmpty()) {
+                        if (partTable.getItems().isEmpty()) {
+                            System.out.println("D");
                             throw new NullPointerException("Part Not Found");
                         } else {
                             partTable.getSelectionModel().select(partTable.getItems().get(0));

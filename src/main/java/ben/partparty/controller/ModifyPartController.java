@@ -33,7 +33,7 @@ public class ModifyPartController extends AddPartController {
      * @param index integer value of the selected Part.
      * @param selection Part object selected to modify.
      *
-     * @RUNTIME_ERROR Modified objects were not registering as changed between Outsourced and InHouse.
+     * RUNTIME_ERROR Modified objects were not registering as changed between Outsourced and InHouse.
      * After type casting and checking types, it was revealed that the objects were changing, but the
      * Radio buttons were defaulting to InHouse even for Outsourced parts.
      */

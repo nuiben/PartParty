@@ -79,7 +79,7 @@ public class AddPartController extends MainViewController {
      * These three if-statements prove sufficient for all numeric value checks on the initial unit tests.
      * NumberFormatException Handling caught the invalid String inputs.
      * @throws RuntimeException if any logical test fails
-     * @RUNTIME_ERROR Prior to existing in this parent class, these exceptions were copy and pasted
+     * RUNTIME_ERROR Prior to existing in this parent class, these exceptions were copy and pasted
      * throughout the various controller classes. The tests were functionally identical but varied
      * on variable name, order, or their mixture with try-catch blocks. Several input validations were able to be
      * bypassed by adding or removing associated objects. Consolidating the tests into a uniform method allowed for

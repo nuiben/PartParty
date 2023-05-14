@@ -34,7 +34,7 @@ public class ModifyProductController extends AddProductController {
     /** Called when save button is selected
      * @param save ActionEvent of save click
      *
-     * @RUNTIME_ERROR Products are not being saved properly after refactoring and changing variables
+     * RUNTIME_ERROR Products are not being saved properly after refactoring and changing variables
      * from public to private.
      * */
     public void OnModifyProductSave(ActionEvent save) {

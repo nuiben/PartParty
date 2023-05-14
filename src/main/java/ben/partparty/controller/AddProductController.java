@@ -93,7 +93,7 @@ public class AddProductController extends AddPartController {
      * @param save lets FXMLloader know the button trigger for updating the current stage.
      * @throws IOException if the FXMLloader cannot locate resource.
      *
-     * The inclusion of a temporary associated parts list makes the visual experience when adding parts
+     * RUNTIME_EXCEPTION The inclusion of a temporary associated parts list makes the visual experience when adding parts
      * much more flexible for the user. When using the remove and get methods from the Product class, there were many
      * bugs that would be created with duplicate values being added, or values not saving the way they appeared in
      * the table on screen. Instead of accessing and modifying the data structure directly
