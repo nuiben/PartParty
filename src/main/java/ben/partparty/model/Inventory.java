@@ -128,7 +128,7 @@ public class Inventory {
     /**
      * Retrieves the ObservableList of Parts
      *
-     * @return ObservableList<Part>
+     * @return ObservableList The Part List
      */
     public static ObservableList<Part> getAllParts() {
         return allParts;
@@ -137,7 +137,7 @@ public class Inventory {
     /**
      * Retrieves the ObservableList of Products
      *
-     * @return ObservableList<Product>
+     * @return ObservableList The Product List
      */
     public static ObservableList<Product> getAllProducts() {
         return allProducts;
