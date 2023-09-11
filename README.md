@@ -1,5 +1,15 @@
+<p align="center">
+  <img src="assets/logo.png">
+</p>
 
-# Part Party
+<p align="center">
+  <img src="https://img.shields.io/github/license/nuiben/PartParty?style=for-the-badge">
+  <img src="https://img.shields.io/github/stars/nuiben/PartParty?style=for-the-badge">
+  <img src="https://img.shields.io/github/issues/nuiben/PartParty?color=blueviolet&style=for-the-badge">
+  <img src="https://img.shields.io/github/forks/nuiben/PartParty?color=teal&style=for-the-badge">
+  <img src="https://img.shields.io/github/issues-pr/nuiben/PartParty?color=tomato&style=for-the-badge">
+</p>
+
 Part Party is a Maven-based Java application that serves as an inventory management system. The application allows users to add, edit, and delete parts and products to their inventory.
 
 The user interface is built using JavaFX, and the application uses an observable list to manage the inventory data.
@@ -30,4 +40,3 @@ Contributions to Part Party are welcome those who request it. If you would like 
 Part Party is licensed under the MIT License.
 
 ---
-_Disclaimer: This markdown file was generated using ChatGPT_
