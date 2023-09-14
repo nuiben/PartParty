@@ -25,7 +25,21 @@ To install Part Party, follow these steps:
 ## Usage
 Upon launching the application, the user will be presented with a main menu, where they can choose to navigate to the Parts or Products pages. From there, the user can add, edit, or delete parts and products from their inventory.
 
-To add a part or product, click the "Add" button and fill out the necessary fields. To edit an existing part or product, select it from the table and click the "Modify" button. To delete a part or product, select it from the table and click the "Delete" button.
+<p align="center">
+  <img src="assets/part-party-01.png">
+</p>
+
+To add a part or product, click the "Add" button and fill out the necessary fields. 
+
+<p align="center">
+  <img src="assets/part-party-02.png">
+</p>
+
+To edit an existing part or product, select it from the table and click the "Modify" button. To delete a part or product, select it from the table and click the "Delete" button.
+
+<p align="center">
+  <img src="assets/part-party-03.png">
+</p>
 
 ## Contributing
 Contributions to Part Party are welcome those who request it. If you would like to contribute, please follow these steps:
